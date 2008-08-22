@@ -95,7 +95,7 @@ preexec () {
 }
 
 case $HOST in
-	abbey,mate,submarine,tv,*.bigfist.net)
+	abbey|mate|submarine|tv|*.bigfist.net)
 		prc="green"
 		;;
 	*.cs.umu.se)
