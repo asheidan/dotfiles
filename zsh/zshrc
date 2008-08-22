@@ -17,6 +17,7 @@ setopt INTERACTIVE_COMMENTS
 setopt LIST_PACKED
 setopt EXTENDED_GLOB
 setopt NO_HUP
+setopt MULTIBYTE
 #setopt PROMPT_SUBST
 
 HISTFILE=~/.histfile
@@ -117,5 +118,6 @@ RPROMPT="%{${fg_bold[grey]}%}%(1v.%2v@%3v:%4v.%~)%{${fg_no_bold[default]}%}"
 #PROMPT="%{${fg_bold[grey]}%}[%{${fg_no_bold[green]}%}%m%{${fg_bold[grey]}%}] %{${fg_bold[white]}%}%n%{${fg_bold[grey]}%}:%{${fg_bold[green]}%}%c%{${fg_bold[grey]}%}%#%{${fg_no_bold[default]}%} "
 PROMPT="%{${fg_bold[grey]}%}[%{${fg_no_bold[$prc]}%}${HOST[1]}%{${fg_bold[grey]}%}]%{${fg_bold[white]}%}${USER[1]%{${fg_bold[grey]}%}:%{${fg_bold[$prc]}%}%c%{${fg_bold[grey]}%}%#%{${fg_no_bold[default]}%} "
 
-alias ls='ls -G -F'
+#alias ls='ls -G -F'
+alias ls='ls --color=auto -F'
 
