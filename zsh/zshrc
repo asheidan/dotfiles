@@ -1,0 +1,119 @@
+# The following lines were added by compinstall
+
+zstyle ':completion:*' completer _complete _match _approximate
+zstyle ':completion:*:max-errors:*' original only
+zstyle ':completion:*:approximate:*' max-errors 1 numeric
+zstyle ':completion:*' group-name ''
+#zstyle ':completion:*' list-colors ''
+zstyle ':completion:*' matcher-list '+' 'm:{a-zA-Z}={A-Za-z}'
+zstyle ':completion:*' menu select
+zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
+zstyle :compinstall filename '/home/emil/.zshrc'
+
+autoload -Uz compinit; compinit
+
+setopt COMPLETE_IN_WORD
+setopt INTERACTIVE_COMMENTS
+setopt LIST_PACKED
+setopt EXTENDED_GLOB
+setopt NO_HUP
+#setopt PROMPT_SUBST
+
+HISTFILE=~/.histfile
+HISTSIZE=1000
+SAVEHIST=1000
+bindkey -e
+
+autoload -U colors; colors
+
+# Git-prompt
+#__git_prompt_info() {
+#	ref=$(git-symbolic-ref HEAD 2> /dev/null) || return
+#	echo "[${ref#refs/heads/}]"
+#}
+
+
+#bindkey -M menuselect '^o' accept-and-infer-next-history
+
+precmd () {
+	local get_dir branch
+ 
+	psvar=()
+	git_dir=$(git-rev-parse --git-dir 2> /dev/null) || return
+	if test -d "$git_dir/../.dotest"; then
+		if test -f "$git_dir/../.dotest/rebasing"; then
+			psvar[3]="rebase"
+		elif test -f "$git_dir/../.dotest/applying"; then
+			psvar[3]="am"
+		else
+			psvar[3]="am/rebase"
+		fi
+		branch="$(git-symbolic-ref HEAD 2>/dev/null)"
+	elif test -f "$git_dir/.dotest-merge/interactive"; then
+		psvar[3]="rebase -i"
+		branch="$(cat "$git_dir/.dotest-merge/head-name")"
+	elif test -d "$git_dir/.dotest-merge"; then
+		psvar[3]="rebase -m"
+		branch="$(cat "$git_dir/.dotest-merge/head-name")"
+	elif test -f "$git_dir/MERGE_HEAD"; then
+		psvar[3]="merge"
+		branch="$(git symbolic-ref HEAD 2>/dev/null)"
+	else
+		test -f "$git_dir/BISECT_LOG" && psvar[3]="bisect"
+		branch="$(git symbolic-ref HEAD 2>/dev/null)" || \
+			branch="$(git describe --exact-match HEAD 2>/dev/null)" || \
+			branch="$(cut -c1-7 "$git_dir/HEAD")..."
+	fi
+
+	psvar[1]="${$(readlink ${git_dir:h})/$HOME/~}"
+	psvar[2]="${branch#refs/heads/}"
+	case $git_dir in
+		.git)
+			psvar[3]="${PWD##*/}"
+			psvar[4]="/"
+			;;
+		*)
+			psvar[3]="$(echo ${git_dir%/.git} | sed 's_.*/__')"
+			psvar[4]="/${PWD#${git_dir%.git}}"
+			;;
+	esac
+
+	case $TERM in
+		xterm*|screen|ansi|rxvt)
+			print -Pn "\e]0;%m:%20<..<%~%<<\a"
+		;;
+	esac
+}
+
+# Screen name
+preexec () {
+	if [[ "$TERM" == "screen" ]]; then
+	local CMD=${1[(wr)^(*=*|sudo|-*)]}
+	echo -ne "\ek$CMD\e\\"
+	fi
+}
+case $HOST in
+	abbey)
+		prc="green"
+		;;
+	*.cs.umu.se)
+		prc="cyan"
+		;;
+	*.acc.umu.se)
+		prc="magenta"
+		;;
+	megaburken)
+		prc="blue"
+		;;
+	*)
+		prc="white"
+		;;
+esac
+
+RPROMPT="%{${fg_bold[grey]}%}%(1v.%2v@%3v:%4v.%~)%{${fg_no_bold[default]}%}"
+
+#PROMPT="%{${fg_bold[grey]}%}[%{${fg_no_bold[green]}%}%m%{${fg_bold[grey]}%}] %{${fg_bold[white]}%}%n%{${fg_bold[grey]}%}:%{${fg_bold[green]}%}%c%{${fg_bold[grey]}%}%#%{${fg_no_bold[default]}%} "
+PROMPT="%{${fg_bold[grey]}%}[%{${fg_no_bold[$prc]}%}${HOST[1]}%{${fg_bold[grey]}%}]%{${fg_bold[white]}%}${USER[1]%{${fg_bold[grey]}%}:%{${fg_bold[$prc]}%}%c%{${fg_bold[grey]}%}%#%{${fg_no_bold[default]}%} "
+
+alias ls='ls -G -F'
+
