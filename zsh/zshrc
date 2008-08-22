@@ -38,6 +38,12 @@ autoload -U colors; colors
 precmd () {
 	local get_dir branch
  
+	case $TERM in
+		xterm*|screen|ansi|rxvt)
+			print -Pn "\e]0;%m:%20<..<%~%<<\a"
+		;;
+	esac
+
 	psvar=()
 	git_dir=$(git-rev-parse --git-dir 2> /dev/null) || return
 	if test -d "$git_dir/../.dotest"; then
@@ -78,11 +84,6 @@ precmd () {
 			;;
 	esac
 
-	case $TERM in
-		xterm*|screen|ansi|rxvt)
-			print -Pn "\e]0;%m:%20<..<%~%<<\a"
-		;;
-	esac
 }
 
 # Screen name
@@ -92,8 +93,9 @@ preexec () {
 	echo -ne "\ek$CMD\e\\"
 	fi
 }
+
 case $HOST in
-	abbey)
+	abbey,mate,submarine,tv,*.bigfist.net)
 		prc="green"
 		;;
 	*.cs.umu.se)
