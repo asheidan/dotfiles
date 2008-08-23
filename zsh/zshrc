@@ -93,6 +93,9 @@ preexec () {
 	local CMD=${1[(wr)^(*=*|sudo|-*)]}
 	echo -ne "\ek$CMD\e\\"
 	fi
+
+	tput cuu1
+	print -P -- "%{${fg_bold[grey]}%}[${USER[1]}]${HOST[1]}:%c%#%{${fg_no_bold[default]}%} "
 }
 
 case $HOST in
