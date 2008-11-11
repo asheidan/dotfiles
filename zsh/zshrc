@@ -46,7 +46,7 @@ precmd () {
 	esac
 
 	psvar=()
-	git_dir=$(git-rev-parse --git-dir 2> /dev/null) || return
+	git_dir=$(git rev-parse --git-dir 2> /dev/null) || return
 	if test -d "$git_dir/../.dotest"; then
 		if test -f "$git_dir/../.dotest/rebasing"; then
 			psvar[3]="rebase"
@@ -55,7 +55,7 @@ precmd () {
 		else
 			psvar[3]="am/rebase"
 		fi
-		branch="$(git-symbolic-ref HEAD 2>/dev/null)"
+		branch="$(git symbolic-ref HEAD 2>/dev/null)"
 	elif test -f "$git_dir/.dotest-merge/interactive"; then
 		psvar[3]="rebase -i"
 		branch="$(cat "$git_dir/.dotest-merge/head-name")"
@@ -99,7 +99,7 @@ preexec () {
 }
 
 case $HOST in
-	abbey|mate|submarine|tv|*.bigfist.net)
+	abbey|mate|submarine|tv|*.bigfist.net|Abbey*)
 		prc="green"
 		;;
 	salt|*.cs.umu.se)
