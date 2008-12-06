@@ -6,3 +6,8 @@
 	status = auto
 	branch = auto
 	interactive = auto
+[core]
+	excludesfile = ~/.gitignore
+[alias]
+	st = status
+	co = checkout

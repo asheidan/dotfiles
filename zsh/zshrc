@@ -124,3 +124,9 @@ PROMPT="%{${fg_bold[grey]}%}[%{${fg_no_bold[$prc]}%}${HOST[1]}%{${fg_bold[grey]}
 #alias ls='ls -G -F'
 alias ls='ls --color=auto -F'
 
+# Rails aliases
+alias sgen="script/generate"
+alias sserv="script/server"
+alias scon="script/console"
+alias splug="script/plugin"
+
