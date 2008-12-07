@@ -17,7 +17,7 @@ setopt INTERACTIVE_COMMENTS
 setopt LIST_PACKED
 setopt EXTENDED_GLOB
 setopt NO_HUP
-setopt MULTIBYTE
+#setopt MULTIBYTE
 #setopt PROMPT_SUBST
 
 HISTFILE=~/.histfile
@@ -99,7 +99,7 @@ preexec () {
 }
 
 case $HOST in
-	abbey|mate|submarine|tv|*.bigfist.net|Abbey*)
+	abbey|mate|submarine|tv|*.bigfist.net|Abbey*|White*|white)
 		prc="green"
 		;;
 	salt|*.cs.umu.se)
