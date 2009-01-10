@@ -130,3 +130,22 @@ alias sserv="script/server"
 alias scon="script/console"
 alias splug="script/plugin"
 
+# Projects
+p() {
+	case "${1}" in
+		status )
+			cwd=`pwd`
+			cd ${PROJDIR}
+			for dir in `ls -F --sort time | grep "/$" | sed 's/.$//'`; do
+				cd "${dir}"
+				echo -n $dir ":: "
+				git status | tail -n 1 | sed 's/(.*//'
+				cd ..
+			done
+			cd "${cwd}"
+			;;
+		* )
+			cd "${PROJDIR}${1}"*/
+			;;
+	esac
+}
