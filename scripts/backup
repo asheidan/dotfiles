@@ -1,0 +1,43 @@
+#!/bin/bash
+
+
+TIMESTAMP=`date "+%Y-%m-%d_%H%M%S"`
+
+LOCALHOSTNAME=`hostname -s`
+SOURCE="${HOME}/"
+
+HOST=black
+DESTINATION="/raid/backup/${LOCALHOSTNAME}"
+
+EXCLUDE="\
+	--exclude .DS_Store \
+	--exclude .Trash/ \
+	--exclude Downloads/ \
+	--exclude Movies/ \
+	--exclude Music/iTunes \
+	--exclude Library/Caches/ \
+	--exclude tmp/"
+
+ping -c 1 ${HOST} > /dev/null 2>&1 || ( echo "Remote host not found" && exit -1 )
+
+case "${1}" in
+	status)
+		echo "Getting status from server"
+		ssh ${HOST} "cd ${DESTINATION} && du -hs \`ls -r\`"
+		exit;;
+esac
+
+echo "Doing a backup to ${DESTINATION}"
+rsync \
+	-Pax ${EXCLUDE} --delete-excluded \
+	--link-dest=${DESTINATION}/current \
+	${SOURCE} ${HOST}:${DESTINATION}/${TIMESTAMP}/
+
+if [ "$?" == 0 ]
+then
+	echo "Transfer sucess, setting latest to current"
+	ssh ${HOST} "cd ${DESTINATION} && rm current && ln -s ${TIMESTAMP} current"
+else
+	echo "Unknown statuscode: ${?}"
+fi
+
