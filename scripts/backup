@@ -16,7 +16,8 @@ EXCLUDE="\
 	--exclude Movies/ \
 	--exclude Music/iTunes \
 	--exclude Library/Caches/ \
-	--exclude tmp/"
+	--exclude tmp/ \
+	--exclude Library/Preferences/Macromedia/"
 
 ping -c 1 ${HOST} > /dev/null 2>&1 || ( echo "Remote host not found" && exit -1 )
 
