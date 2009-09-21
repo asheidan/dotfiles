@@ -1,0 +1,19 @@
+require 'autotest/redgreen'
+# require 'autotest/growl'
+
+module Autotest::Growl
+  def self.growl title, msg, img, pri=0, stick=""
+    grwl_string = "growlnotify -n autotest -p #{pri} --image #{img} --message #{msg.inspect} #{title} #{stick}"
+    #puts "GROWLING :: #{grwl_string}"
+    system grwl_string
+  end
+ 
+  Autotest.add_hook :ran_command do |at|
+    output = at.results.last.slice(/(\d+).*errors/)
+    if output =~ /ns.*[1-9]/
+      growl "", "#{output}", '~/Library/Application\ Support/AutoTest/rails_red.png', 2 #, "-s" 
+    else
+      growl "", "#{output}", '~/Library/Application\ Support/AutoTest/rails_green.png'
+    end
+  end
+end

@@ -17,7 +17,7 @@ setopt INTERACTIVE_COMMENTS
 setopt LIST_PACKED
 setopt EXTENDED_GLOB
 setopt NO_HUP
-setopt MULTIBYTE
+#setopt MULTIBYTE
 #setopt PROMPT_SUBST
 
 HISTFILE=~/.histfile
@@ -46,7 +46,7 @@ precmd () {
 	esac
 
 	psvar=()
-	git_dir=$(git-rev-parse --git-dir 2> /dev/null) || return
+	git_dir=$(git rev-parse --git-dir 2> /dev/null) || return
 	if test -d "$git_dir/../.dotest"; then
 		if test -f "$git_dir/../.dotest/rebasing"; then
 			psvar[3]="rebase"
@@ -55,7 +55,7 @@ precmd () {
 		else
 			psvar[3]="am/rebase"
 		fi
-		branch="$(git-symbolic-ref HEAD 2>/dev/null)"
+		branch="$(git symbolic-ref HEAD 2>/dev/null)"
 	elif test -f "$git_dir/.dotest-merge/interactive"; then
 		psvar[3]="rebase -i"
 		branch="$(cat "$git_dir/.dotest-merge/head-name")"
@@ -94,15 +94,15 @@ preexec () {
 	echo -ne "\ek$CMD\e\\"
 	fi
 
-	tput cuu1
-	print -P -- "%{${fg_bold[grey]}%}[${USER[1]}]${HOST[1]}:%c%#%{${fg_no_bold[default]}%} "
+	# tput cuu1
+	# print -P -- "%{${fg_bold[grey]}%}[${HOST[1]}]${USER[1]}:%c%#%{${fg_no_bold[default]}%} "
 }
 
 case $HOST in
-	abbey|mate|submarine|tv|*.bigfist.net)
+	abbey|mate|submarine|tv|*.bigfist.net|Abbey*|White*|white)
 		prc="green"
 		;;
-	*.cs.umu.se)
+	salt|*.cs.umu.se)
 		prc="cyan"
 		;;
 	*.acc.umu.se)
@@ -119,8 +119,33 @@ esac
 RPROMPT="%{${fg_bold[grey]}%}%(1v.%2v@%3v:%4v.%~)%{${fg_no_bold[default]}%}"
 
 #PROMPT="%{${fg_bold[grey]}%}[%{${fg_no_bold[green]}%}%m%{${fg_bold[grey]}%}] %{${fg_bold[white]}%}%n%{${fg_bold[grey]}%}:%{${fg_bold[green]}%}%c%{${fg_bold[grey]}%}%#%{${fg_no_bold[default]}%} "
-PROMPT="%{${fg_bold[grey]}%}[%{${fg_no_bold[$prc]}%}${HOST[1]}%{${fg_bold[grey]}%}]%{${fg_bold[white]}%}${USER[1]%{${fg_bold[grey]}%}:%{${fg_bold[$prc]}%}%c%{${fg_bold[grey]}%}%#%{${fg_no_bold[default]}%} "
+PROMPT="%{${fg_bold[grey]}%}[%{${fg_no_bold[$prc]}%}${HOST[1]}%{${fg_bold[grey]}%}]%{${fg_bold[white]}%}${USER[1]}%{${fg_bold[grey]}%}:%{${fg_bold[$prc]}%}%c%{${fg_bold[grey]}%}%#%{${fg_no_bold[default]}%} "
 
 #alias ls='ls -G -F'
 alias ls='ls --color=auto -F'
 
+# Rails aliases
+alias sgen="script/generate"
+alias sserv="script/server"
+alias scon="script/console"
+alias splug="script/plugin"
+
+# Projects
+p() {
+	case "${1}" in
+		status )
+			cwd=`pwd`
+			cd ${PROJDIR}
+			for dir in `ls -F --sort time | grep "/$" | sed 's/.$//'`; do
+				cd "${dir}"
+				echo -n $dir ":: "
+				git status | tail -n 1 | sed 's/(.*//'
+				cd ..
+			done
+			cd "${cwd}"
+			;;
+		* )
+			cd "${PROJDIR}${1}"*/
+			;;
+	esac
+}
