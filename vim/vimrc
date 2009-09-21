@@ -123,6 +123,8 @@ nmap <silent> <F5> :make<CR>
 
 let VCSCommandGitExec = '/opt/local/bin/git'
 
+set foldmethod=marker
+
 " Adding quickfixsupport for java
 autocmd BufRead *.java set makeprg=ant
 autocmd BufRead *.java set efm=%A\ %#[javac]\ %f:%l:\ %m,%-Z\ %#[javac]\ %p^,%-C%.%#
