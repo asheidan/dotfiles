@@ -91,6 +91,10 @@ endif " has("autocmd")
 " Smart indenting, based on the typed code.
 set smartindent 
 
+" Soft word wrap
+set formatoptions+=l
+set lbr
+
 " Tab spacing.
 set tabstop=3 
 set shiftwidth=3 " same
@@ -134,6 +138,13 @@ function ToggleHLSearch()
             set hls
        endif
 endfunction
+
+" Completing
+set completeopt=longest,menuone
+inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+inoremap <expr> <C-n> pumvisible() ? '<C-n>' : '<C-n><C-r>=pumvisible() ? "\<lt>Down>" : ""<CR>'
+
+
 " Spelling
 if has("spell")
   " turn spelling on by default
