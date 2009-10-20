@@ -99,14 +99,14 @@ preexec () {
 }
 
 case $HOST in
-	abbey|mate|submarine|tv|*.bigfist.net|Abbey*|White*|white)
-		prc="green"
+	abbey|mate|submarine|tv|*.bigfist.net|Abbey*|White*|white|black)
+		prc="magenta"
 		;;
 	salt|*.cs.umu.se)
 		prc="cyan"
 		;;
 	*.acc.umu.se)
-		prc="magenta"
+		prc="green"
 		;;
 	megaburken)
 		prc="blue"
