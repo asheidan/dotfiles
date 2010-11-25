@@ -157,11 +157,49 @@ function ToggleScons()
 endfunction
 au BufNewFile,BufRead SCons* set filetype=scons
 
+" CMake
+au BufNewFile,BufRead *.cmake,CMakeLists.txt,*.cmake.in setf cmake
+au BufNewFile,BufRead *.ctest,*.ctest.in setf cmake
+au BufNewFile,BufRead *.cmake,CMakeLists.txt,*.cmake.in runtime! indent/cmake.vim
+
+" TeX
+au BufNewFile,BufRead *.tex,*.latex,*.ltx set efm=%E!\ LaTeX\ %trror:\ %m,
+	\%E!\ %m,
+	\%+WLaTeX\ %.%#Warning:\ %.%#line\ %l%.%#,
+	\%+W%.%#\ at\ lines\ %l--%*\\d,
+	\%WLaTeX\ %.%#Warning:\ %m,
+	\%Cl.%l\ %m,
+	\%+C\ \ %m.,
+	\%+C%.%#-%.%#,
+	\%+C%.%#[]%.%#,
+	\%+C[]%.%#,
+	\%+C%.%#%[{}\\]%.%#,
+	\%+C<%.%#>%.%#,
+	\%C\ \ %m,
+	\%-GSee\ the\ LaTeX%m,
+	\%-GType\ \ H\ <return>%m,
+	\%-G\ ...%.%#,
+	\%-G%.%#\ (C)\ %.%#,
+	\%-G(see\ the\ transcript%.%#),
+	\%-G\\s%#,
+	\%+O(%f)%r,
+	\%+P(%f%r,
+	\%+P\ %\\=(%f%r,
+	\%+P%*[^()](%f%r,
+	\%+P[%\\d%[^()]%#(%f%r,
+	\%+Q)%r,
+	\%+Q%*[^()])%r,
+	\%+Q[%\\d%*[^()])%r
+
 " Adding quickfixsupport for java
 autocmd BufRead *.java set makeprg=ant
 autocmd BufRead *.java set efm=%A\ %#[javac]\ %f:%l:\ %m,%-Z\ %#[javac]\ %p^,%-C%.%#
 
 autocmd BufRead *.gnuplot set filetype=gnuplot
+
+" CuTest, not perfected, doesn't list test yet...
+set efm^=%n)\ Test%.%#:%f:%l:\ %m
+
 " Terminal window title
 set title
 
