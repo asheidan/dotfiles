@@ -121,12 +121,21 @@ set softtabstop=3 " same
 set autowrite
 
 let NERDTreeSortDirs = 1
-let NERDTreeIgnore = ['\~$', '\.class$','\.aux$','\.dvi$','\.tmproj$']
+let NERDTreeIgnore = ['\~$','\.o$','\.elf$','\.class$','\.aux$','\.dvi$','\.tmproj$']
 
 " map <F2> to toggle NERDTree window
-nmap <silent> <F2> :NERDTreeToggle<CR>
+nmap <silent> <F2> :NERDTree<CR>
+nmap <silent> <S-F2> :NERDTreeToggle<CR>
 
 nmap <silent> <F3> :set nu!<CR>
+nmap <silent> <S-F3> :call ToggleFoldColumn()<CR>
+function ToggleFoldColumn()
+	if &foldcolumn==0
+		set foldcolumn=1
+	else
+		set foldcolumn=0
+	endif
+endfunction
 nmap <silent> <F4> :call ToggleHLSearch()<CR>
 nmap <silent> <F5> :make<CR>
 
@@ -135,6 +144,7 @@ let VCSCommandGitExec = '/opt/local/bin/git'
 set foldmethod=marker
 
 " Toggle Make and SCons
+set makeprg=scons
 nmap <silent> t<F5> :call ToggleScons()<CR>
 function ToggleScons()
 	if &makeprg=='make'
@@ -151,6 +161,7 @@ au BufNewFile,BufRead SCons* set filetype=scons
 autocmd BufRead *.java set makeprg=ant
 autocmd BufRead *.java set efm=%A\ %#[javac]\ %f:%l:\ %m,%-Z\ %#[javac]\ %p^,%-C%.%#
 
+autocmd BufRead *.gnuplot set filetype=gnuplot
 " Terminal window title
 set title
 
@@ -174,7 +185,7 @@ inoremap <expr> <C-n> pumvisible() ? '<C-n>' : '<C-n><C-r>=pumvisible() ? "\<lt>
 " Background buffers
 set hidden
 
-"let mapleader = ","
+let mapleader = ","
 
 " Tab-complete menu
 set wildmenu
@@ -211,5 +222,5 @@ endif
 "   %v ?
 "   %P percentage through buffer
 "   %) end of width specification
-set statusline=%<%.40f%m%r%h%w%=\ %y[%{&makeprg}]\ (%{&encoding},%{&ff},%{&ts})\ %6.(%l%),%-5.(%c%V%)\ [%P]
+set statusline=%<%.40f%m%r%h%w%=\ %{fugitive#statusline()}\ %y[%{&makeprg}]\ (%{&encoding},%{&ff},%{&ts})\ %6.(%l%),%-5.(%c%V%)\ [%P]
 set laststatus=2
