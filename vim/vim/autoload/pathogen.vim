@@ -1,0 +1,1 @@
+runtime pathogen/pathogen.vim
