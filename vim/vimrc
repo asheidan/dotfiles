@@ -121,11 +121,11 @@ set softtabstop=3 " same
 set autowrite
 
 let NERDTreeSortDirs = 1
-let NERDTreeIgnore = ['\~$','\.o$','\.elf$','\.class$','\.aux$','\.dvi$','\.tmproj$']
+let NERDTreeIgnore = ['\~$','\.o$','\.elf$','\.class$','\.aux$','\.fls$','\.out$','\.\d*\(gf\|pk\)$','\.tfm$','\.tmproj$']
 
 " map <F2> to toggle NERDTree window
-nmap <silent> <F2> :NERDTree<CR>
-nmap <silent> <S-F2> :NERDTreeToggle<CR>
+nmap <silent> <S-F2> :NERDTree<CR>
+nmap <silent> <F2> :NERDTreeToggle<CR>
 
 nmap <silent> <F3> :set nu!<CR>
 nmap <silent> <S-F3> :call ToggleFoldColumn()<CR>
@@ -139,7 +139,7 @@ endfunction
 nmap <silent> <F4> :call ToggleHLSearch()<CR>
 nmap <silent> <F5> :make<CR>
 
-let VCSCommandGitExec = '/opt/local/bin/git'
+" let VCSCommandGitExec = '/opt/local/bin/git'
 
 set foldmethod=marker
 
