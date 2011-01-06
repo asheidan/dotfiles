@@ -117,6 +117,12 @@ set softtabstop=3 " same
 " let g:miniBufExplMapCTabSwitchBufs = 1 
 " let g:miniBufExplModSelTarget = 1 
 
+" RagTag
+let g:ragtag_global_maps = 1
+
+" Command-T
+nmap <silent> <Leader>T :CommandTFlush<CR>
+
 " Write before :make
 set autowrite
 
@@ -127,7 +133,18 @@ let NERDTreeIgnore = ['\~$','\.o$','\.elf$','\.class$','\.aux$','\.fls$','\.out$
 nmap <silent> <S-F2> :NERDTree<CR>
 nmap <silent> <F2> :NERDTreeToggle<CR>
 
-nmap <silent> <F3> :set nu!<CR>
+" Toggle linenumbers
+nmap <silent> <F3> :set nu!<CR><Bar>:echo "Line numbers: " . strpart("OffOn", 3* &nu,3)<CR>
+
+" Toggle highlight search term
+nmap <silent> <F4> :set hls!<CR><Bar>:echo "Search highlight: " . strpart("OffOn", 3* &hls,3)<CR>
+
+" Toggle softwrap
+nmap tw :set wrap!<CR><Bar>:echo "Softwrap: " . strpart("OffOn", 3* &wrap,3)<CR>
+set linebreak
+"set showbreak=\ \ \ 
+nmap tW :set linebreak!<CR><Bar>:echo "Break words: " . strpart("OffOn", 3* !&linebreak,3)<CR>
+
 nmap <silent> <S-F3> :call ToggleFoldColumn()<CR>
 function ToggleFoldColumn()
 	if &foldcolumn==0
@@ -135,8 +152,9 @@ function ToggleFoldColumn()
 	else
 		set foldcolumn=0
 	endif
+	echo "Show folds: " . strpart("OffOn", 3* &foldcolumn,3)
 endfunction
-nmap <silent> <F4> :call ToggleHLSearch()<CR>
+
 nmap <silent> <F5> :make<CR>
 
 " let VCSCommandGitExec = '/opt/local/bin/git'
@@ -207,14 +225,6 @@ set title
 set ignorecase
 set smartcase
 
-function ToggleHLSearch()
-       if &hls
-            set nohls
-       else
-            set hls
-       endif
-endfunction
-
 " Completing
 set completeopt=longest,menuone
 inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
@@ -230,7 +240,7 @@ set wildmenu
 
 " Spelling
 if has("spell")
-  " turn spelling on by default
+  " turn spelling off by default
   set nospell
   set spelllang=sv
   " toggle spelling with F4 key
@@ -260,5 +270,5 @@ endif
 "   %v ?
 "   %P percentage through buffer
 "   %) end of width specification
-set statusline=%<%.40f%m%r%h%w%=\ %{fugitive#statusline()}\ %y[%{&makeprg}]\ (%{&encoding},%{&ff},%{&ts})\ %6.(%l%),%-5.(%c%V%)\ [%P]
+set statusline=%<%.40f%m%r%h%w%=\ %{fugitive#statusline()}\ %y[%{&makeprg}]\ (%(%{&fileencoding},%)%{&ff},%{&ts},%{&fo},%{&textwidth})\ %6.(%l%),%-5.(%c%V%)\ [%P]
 set laststatus=2
