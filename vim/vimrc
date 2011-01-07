@@ -126,6 +126,9 @@ nmap <silent> <Leader>T :CommandTFlush<CR>
 " Write before :make
 set autowrite
 
+let g:bufExplorerFindActive = 1
+let g:bufExplorerShowRelativePath = 1
+
 let NERDTreeSortDirs = 1
 let NERDTreeIgnore = ['\~$','\.o$','\.elf$','\.class$','\.aux$','\.fls$','\.out$','\.\d*\(gf\|pk\)$','\.tfm$','\.tmproj$']
 
@@ -138,6 +141,9 @@ nmap <silent> <F3> :set nu!<CR><Bar>:echo "Line numbers: " . strpart("OffOn", 3*
 
 " Toggle highlight search term
 nmap <silent> <F4> :set hls!<CR><Bar>:echo "Search highlight: " . strpart("OffOn", 3* &hls,3)<CR>
+
+" Toggle show invisibles
+nmap <silent> ti	:set list!<CR><BAR>:echo "Show invisibles: " . strpart("OffOn", 3* &list,3)<CR>
 
 " Toggle softwrap
 nmap tw :set wrap!<CR><Bar>:echo "Softwrap: " . strpart("OffOn", 3* &wrap,3)<CR>
@@ -242,7 +248,8 @@ set wildmenu
 if has("spell")
   " turn spelling off by default
   set nospell
-  set spelllang=sv
+  "set spelllang=sv
+  set spelllang=en
   " toggle spelling with F4 key
   map <F6> :set spell!<CR><Bar>:echo "Spell Check: " . strpart("OffOn", 3 * &spell, 3)<CR>
   " they were using white on white
@@ -250,6 +257,11 @@ if has("spell")
   " limit it to just the top 10 items
   set sps=best,10                    
 endif
+
+function! Spellang()
+	return strpart(&spelllang,2 * !&spell,2)
+endfunction
+
 
 " Format statusbar
 " cf the default statusline: %<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
@@ -270,5 +282,5 @@ endif
 "   %v ?
 "   %P percentage through buffer
 "   %) end of width specification
-set statusline=%<%.40f%m%r%h%w%=\ %{fugitive#statusline()}\ %y[%{&makeprg}]\ (%(%{&fileencoding},%)%{&ff},%{&ts},%{&fo},%{&textwidth})\ %6.(%l%),%-5.(%c%V%)\ [%P]
+set statusline=%<%.40f%m%r%h%w%=\ %((%{Spellang()})%)%(\ %{fugitive#statusline()}%)\ %y[%{&makeprg}]\ (%(%{&fileencoding},%)%{&ff},%{&ts},%{&fo},%{&textwidth})\ %6.(%l%),%-5.(%c%V%)\ [%P]
 set laststatus=2
