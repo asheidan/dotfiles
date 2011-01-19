@@ -137,19 +137,19 @@ nmap <silent> <S-F2> :NERDTree<CR>
 nmap <silent> <F2> :NERDTreeToggle<CR>
 
 " Toggle linenumbers
-nmap <silent> <F3> :set nu!<CR><Bar>:echo "Line numbers: " . strpart("OffOn", 3* &nu,3)<CR>
+nmap <silent> <F3> :set nu!<CR>:echo "Line numbers: " . strpart("OffOn", 3* &nu,3)<CR>
 
 " Toggle highlight search term
-nmap <silent> <F4> :set hls!<CR><Bar>:echo "Search highlight: " . strpart("OffOn", 3* &hls,3)<CR>
+nmap <silent> <F4> :set hls!<CR>:echo "Search highlight: " . strpart("OffOn", 3* &hls,3)<CR>
 
 " Toggle show invisibles
-nmap <silent> ti	:set list!<CR><BAR>:echo "Show invisibles: " . strpart("OffOn", 3* &list,3)<CR>
+nmap <silent> ti	:set list!<CR>:echo "Show invisibles: " . strpart("OffOn", 3* &list,3)<CR>
 
 " Toggle softwrap
-nmap tw :set wrap!<CR><Bar>:echo "Softwrap: " . strpart("OffOn", 3* &wrap,3)<CR>
+nmap tw :set wrap!<CR>:echo "Softwrap: " . strpart("OffOn", 3* &wrap,3)<CR>
 set linebreak
 "set showbreak=\ \ \ 
-nmap tW :set linebreak!<CR><Bar>:echo "Break words: " . strpart("OffOn", 3* !&linebreak,3)<CR>
+nmap tW :set linebreak!<CR>:echo "Break words: " . strpart("OffOn", 3* !&linebreak,3)<CR>
 
 nmap <silent> <S-F3> :call ToggleFoldColumn()<CR>
 function ToggleFoldColumn()
@@ -251,7 +251,7 @@ if has("spell")
   "set spelllang=sv
   set spelllang=en
   " toggle spelling with F4 key
-  map <F6> :set spell!<CR><Bar>:echo "Spell Check: " . strpart("OffOn", 3 * &spell, 3)<CR>
+  map <F6> :set spell!<CR>:echo "Spell Check: " . strpart("OffOn", 3 * &spell, 3)<CR>
   " they were using white on white
   highlight PmenuSel ctermfg=black ctermbg=lightgray
   " limit it to just the top 10 items
