@@ -163,13 +163,13 @@ nmap <silent> <F3> :set nu!<CR>:echo "Line numbers: " . strpart("OffOn", 3* &nu,
 nmap <silent> <F4> :set hls!<CR>:echo "Search highlight: " . strpart("OffOn", 3* &hls,3)<CR>
 
 " Toggle show invisibles
-nmap <silent> ti	:set list!<CR>:echo "Show invisibles: " . strpart("OffOn", 3* &list,3)<CR>
+"nmap <silent> ti	:set list!<CR>:echo "Show invisibles: " . strpart("OffOn", 3* &list,3)<CR>
 
 " Toggle softwrap
-nmap tw :set wrap!<CR>:echo "Softwrap: " . strpart("OffOn", 3* &wrap,3)<CR>
+"nmap tw :set wrap!<CR>:echo "Softwrap: " . strpart("OffOn", 3* &wrap,3)<CR>
 set linebreak
 "set showbreak=\ \ \ 
-nmap tW :set linebreak!<CR>:echo "Break words: " . strpart("OffOn", 3* !&linebreak,3)<CR>
+"nmap tW :set linebreak!<CR>:echo "Break words: " . strpart("OffOn", 3* !&linebreak,3)<CR>
 
 nmap <silent> <S-F3> :call ToggleFoldColumn()<CR>
 function ToggleFoldColumn()
@@ -189,16 +189,16 @@ set foldmethod=marker
 
 " Toggle Make and SCons
 set makeprg=scons
-nmap <silent> t<F5> :call ToggleScons()<CR>
-function ToggleScons()
-	if &makeprg=='make'
-		set makeprg=scons
-		echo "SCons set as builder"
-	else
-		set makeprg=make
-		echo "Make set as builder"
-	endif
-endfunction
+"nmap <silent> t<F5> :call ToggleScons()<CR>
+"function ToggleScons()
+"	if &makeprg=='make'
+"		set makeprg=scons
+"		echo "SCons set as builder"
+"	else
+"		set makeprg=make
+"		echo "Make set as builder"
+"	endif
+"endfunction
 au BufNewFile,BufRead SCons* set filetype=scons
 
 " CMake
