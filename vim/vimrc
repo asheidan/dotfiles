@@ -304,5 +304,6 @@ endfunction
 "   %v ?
 "   %P percentage through buffer
 "   %) end of width specification
-set statusline=%<%.40f%m%r%h%w%=\ %((%{Spellang()})%)%(\ %{fugitive#statusline()}%)\ %y[%{&makeprg}]\ (%(%{&fileencoding},%)%{&ff},%{&ts},%{&fo},%{&textwidth})\ %6.(%l%),%-5.(%c%V%)\ [%P]
+"set statusline=%<%.40f%m%r%h%w%=\ %((%{Spellang()})%)%(\ %{fugitive#statusline()}%)\ %y[%{&makeprg}]\ (%(%{&fileencoding},%)%{&ff},%{&ts},%{&fo},%{&textwidth})\ %6.(%l%),%-5.(%c%V%)\ [%P]
+set statusline=%<%.40f%m%r%h%w%=\ %((%{Spellang()})%)%(\ %{fugitive#statusline()}%)\ %y\ (%(%{&fileencoding},%)%{&ff},%{&ts},%{&fo},%{&textwidth})\ %6.(%l%),%-5.(%c%V%)\ [%P]
 set laststatus=2
