@@ -17,6 +17,19 @@ EXCLUDE="\
 	--exclude Music/iTunes \
 	--exclude Library/Caches/ \
 	--exclude tmp/ \
+	--exclude Documents/Saved\ Calls/ \
+	--exclude Library/Application\ Support/Steam/ \
+	--exclude Library/Application\ Support/Crossover/ \
+	--exclude Library/Application\ Support/MobileSync/ \
+	--exclude Library/Application\ Support/VMware\ Fusion/ \
+	--exclude Library/Application\ Support/MAME\ OS\ X/ \
+	--include Library/Application\ Support/Candybar \
+	--include Library/Application\ Support/1Password \
+	--include Library/Application\ Support/Adium\ 2.0 \
+	--include Library/Application\ Support/TextMate \
+	--include Library/Application\ Support/AddressBook \
+	--include Library/Application\ Support/Playhouse \
+	--include Library/Application\ Support/WorldOfGoo \
 	--exclude Library/Preferences/Macromedia/"
 
 ping -c 1 ${HOST} > /dev/null 2>&1 || ( echo "Remote host not found" && exit -1 )
