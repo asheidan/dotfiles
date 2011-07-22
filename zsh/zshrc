@@ -99,7 +99,7 @@ preexec () {
 }
 
 case $HOST in
-	abbey|mate|submarine|tv|*.bigfist.net|Abbey*|White*|white|black)
+	abbey|mate|submarine|tv|*.bigfist.net|Abbey*|[Ww]hite*|black)
 		prc="magenta"
 		;;
 	salt|*.cs.umu.se)
@@ -115,6 +115,7 @@ case $HOST in
 		prc="white"
 		;;
 esac
+
 
 RPROMPT="%{${fg_bold[grey]}%}%(1v.%2v@%3v:%4v.%~)%{${fg_no_bold[default]}%}"
 
