@@ -1,6 +1,6 @@
-*font: -*-lucidatypewriter-medium-*-*-*-10-*-*-*-*-*-iso8859-1
-xterm*font: -*-lucidatypewriter-medium-*-*-*-10-*-*-*-*-*-iso8859-1
-xterm*boldFont: -*-lucidatypewriter-medium-*-*-*-10-*-*-*-*-*-iso8859-1
+!*font: -*-lucidatypewriter-medium-*-*-*-10-*-*-*-*-*-iso8859-1
+!xterm*font: -*-lucidatypewriter-medium-*-*-*-10-*-*-*-*-*-iso8859-1
+!xterm*boldFont: -*-lucidatypewriter-medium-*-*-*-10-*-*-*-*-*-iso8859-1
 xterm*boldMode:	false
 xterm*cursorColor: magenta
 xterm*foreground: grey80
