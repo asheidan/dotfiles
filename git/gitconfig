@@ -8,7 +8,7 @@
 	interactive = auto
 	ui = auto
 [core]
-	excludesfile = ~/.gitignore
+	excludesfile = /Users/emil/.gitignore
 [alias]
 	st = status -s
 	co = checkout

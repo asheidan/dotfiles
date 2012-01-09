@@ -41,7 +41,8 @@ precmd () {
  
 	case $TERM in
 		xterm*|screen|ansi|rxvt)
-			print -Pn "\e]0;%m:%20<..<%~%<<\a"
+			#print -Pn "\e]0;%m:%20<..<%~%<<\a"
+			print -Pn "\e]0;%m:%~%<<\a"
 		;;
 	esac
 
@@ -99,7 +100,10 @@ preexec () {
 }
 
 case $HOST in
-	abbey|mate|submarine|tv|*.bigfist.net|Abbey*|[Ww]hite*|black)
+	[Ww]hite*)
+		prc="yellow"
+		;;
+	abbey|mate|submarine|tv|*.bigfist.net|Abbey*|black)
 		prc="magenta"
 		;;
 	salt|*.cs.umu.se)
@@ -122,8 +126,8 @@ RPROMPT="%{${fg_bold[grey]}%}%(1v.%2v@%3v:%4v.%~)%{${fg_no_bold[default]}%}"
 #PROMPT="%{${fg_bold[grey]}%}[%{${fg_no_bold[green]}%}%m%{${fg_bold[grey]}%}] %{${fg_bold[white]}%}%n%{${fg_bold[grey]}%}:%{${fg_bold[green]}%}%c%{${fg_bold[grey]}%}%#%{${fg_no_bold[default]}%} "
 PROMPT="%{${fg_bold[grey]}%}[%{${fg_no_bold[$prc]}%}${HOST[1]}%{${fg_bold[grey]}%}]%{${fg_bold[white]}%}${USER[1]}%{${fg_bold[grey]}%}:%{${fg_bold[$prc]}%}%c%{${fg_bold[grey]}%}%#%{${fg_no_bold[default]}%} "
 
-#alias ls='ls -G -F'
-alias ls='ls --color=auto -F'
+alias ls='ls -G -F'
+#alias ls='ls --color=auto -F'
 
 # Rails aliases
 alias sgen="script/generate"

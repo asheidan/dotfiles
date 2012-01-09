@@ -20,6 +20,7 @@ startup_message off
 
 # advertise hardstatus support to $TERMCAP
 # termcapinfo  * '' 'hs:ts=\E_:fs=\E\\:ds=\E_\E\\'
+termcapinfo xterm-256colo|xterm-color|xterm|xterms|xs|rxvt ti@:te@
 
 # make the shell in every window a login shell
 #shell -$SHELL
