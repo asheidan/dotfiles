@@ -12,3 +12,5 @@
 [alias]
 	st = status -s
 	co = checkout
+	top-level = rev-parse --show-toplevel
+	tree = log --oneline --graph --decorate
