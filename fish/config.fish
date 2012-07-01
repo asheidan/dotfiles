@@ -1,6 +1,20 @@
 set fish_greeting
 
-if test -d $HOME/bin; set -x PATH $HOME/bin $PATH; end
+
+if status -l
+	echo "Im a login shell"
+	if not set -q __fish_has_read_etcpaths
+		if [ -f "/usr/libexec/path_helper" ]
+			eval (/usr/libexec/path_helper -c | sed 's/[:"]/ /g')
+		end
+		set -gx __fish_has_read_etcpaths
+	end
+	if not contains "$HOME/bin" $PATH
+		if test -d $HOME/bin
+			set -x PATH $HOME/bin $PATH
+		end
+	end
+end
 
 if not set -q __fish_prompt_user
 	set -g __fish_prompt_user (set_color --bold white)
