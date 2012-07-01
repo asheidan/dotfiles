@@ -2,6 +2,23 @@ set fish_greeting
 
 if test -d $HOME/bin; set -x PATH $HOME/bin $PATH; end
 
+if not set -q __fish_prompt_user
+	set -g __fish_prompt_user (set_color --bold white)
+end
+
+if not set -q __fish_prompt_cwd
+	# set -g __fish_prompt_cwd (set_color $fish_color_cwd)
+	set -g __fish_prompt_cwd (set_color magenta)
+end
+
+if not set -q __fish_prompt_contexts
+	set -g __fish_prompt_contexts (set_color green)
+end
+
+if not set -q __fish_prompt_decorators
+	set -g __fish_prompt_decorators (set_color --bold black)
+end
+
 function __extended_info -d "Small function that shows additional information"
 	# Save info to restore later
 	#set __cmd_line (commandline)
@@ -19,14 +36,17 @@ function __extended_info -d "Small function that shows additional information"
 	commandline -f repaint
 end
 
-function git_revision
+function git_revision #{{{1
 	set -l git_dir
 	if [ -d .git ]
-		set git_dir (pwd).git
+		set git_dir "$PWD/.git"
 	else
 		set git_dir (git rev-parse --git-dir 2> /dev/null)
 	end
-	if [ -z "$git_dir" ]; return; end
+	if [ -z "$git_dir" ]
+		set -e git_repo
+		return
+	end
 
 	# Try to find out our current branch
 	set -l git_branch
@@ -34,27 +54,36 @@ function git_revision
 	if [ -z "$git_branch" ]; set git_branch (git describe --exact-match HEAD 2> /dev/null); end
 	if [ -z "$git_branch" ]; set git_branch (cut -c1-7 "$git_dir/HEAD")"..."; end
 
-	set -l git_path
-	set git_path (echo $git_dir | sed 's_\.git$__')
+	set -g git_repo
+	set git_repo (echo $git_dir | sed 's_/\.git$__')
+	# echo $git_repo > /dev/stderr
 	
-	set -l git_repo
-	set git_repo (basename "$git_path")
+	echo $git_branch
+end #}}}1
 
-	set -l git_rel
-	set git_rel (pwd | sed "s-$git_path--")
-	
-	echo $git_branch'@'$git_repo':/'$git_rel
-end
-
-function collect_contexts -d "Returns a space separated list of contexts"
+function collect_contexts -d "Returns a space separated list of contexts" #{{{1
 	set virtualenv (basename "$VIRTUAL_ENV")
 	set git_rev (git_revision)
 	set context_list
 	if [ -n "$virtualenv" ]; set context_list $context_list "v:$virtualenv"; end
 	if [ -n "$git_rev" ]; set context_list $context_list "g:$git_rev"; end
-	if [ 0 -lt (count $context_list) ]
-		echo "$context_list"
+	for context in $context_list
+		echo $context
+	end | sort
+end #}}}1
+
+function fish_prompt_info_put
+	set -l l_sep '['
+	set -l r_sep ']'
+	if [ 2 -lt (count $argv) ]
+		set l_sep $argv[3]
+		set r_sep $argv[4]
 	end
+	echo -n -s "$__fish_prompt_decorators" "$l_sep" "$__fish_prompt_normal" $argv[1]
+	if [ 1 -lt (count $argv) ]
+		echo -n -s $argv[2]
+	end
+	echo -n -s "$__fish_prompt_decorators" "$r_sep" ' '
 end
 
 function fish_prompt --description 'Write out the prompt'
@@ -84,25 +113,23 @@ function fish_prompt --description 'Write out the prompt'
 
 		case '*'
 
-		if not set -q __fish_prompt_cwd
-			set -g __fish_prompt_cwd (set_color $fish_color_cwd)
-		end
-
-		if not set -q __fish_prompt_contexts
-			set -g __fish_prompt_contexts (set_color --bold black)
-		end
-
 		set contexts (collect_contexts)
-		echo -n "$__fish_prompt_contexts""["$contexts"] ""$__fish_prompt_normal"
-		if [ 20 -lt (echo $contexts | wc -c) ]; echo; end
-		echo -n -s "$USER" @ "$__fish_prompt_hostname" ' ' "$__fish_prompt_cwd" (prompt_pwd) "$__fish_prompt_normal" '> '
+
+		# if [ 20 -lt (echo $contexts | wc -c) ]; echo; end
+		fish_prompt_info_put "$__fish_prompt_cwd" (path_format -bu "$git_repo")
+		for context in $contexts
+			fish_prompt_info_put "$__fish_prompt_contexts" "$context"
+		end
+		fish_prompt_info_put "$__fish_prompt_user" "$USER""$__fish_prompt_decorators"@"$__fish_prompt_user""$__fish_prompt_hostname"
+		echo
+		echo -n -s '[' "$__fish_prompt_normal" ' '
 
 	end
 end
 
 function fish_title
 	# Setting title
-	pwd
+	echo $PWD
 end
 
 #bind -a \cv __extended_info
