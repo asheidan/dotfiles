@@ -15,3 +15,4 @@
 	top-level = rev-parse --show-toplevel
 	tree = log --oneline --graph --decorate
 	stb = status -s -b
+	unmerged = branch --no-merged
