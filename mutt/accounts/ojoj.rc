@@ -1,0 +1,14 @@
+##########
+# Category essential
+##########
+
+set from = "emil@ojoj.se"
+set imap_user = "emil@ojoj.se"
+# set imap_pass
+source "gpg --batch -qd ~/.mutt/ojoj-credentials.gpg |"
+set smtp_pass = ""
+
+set hostname = "ojoj.se"
+set status_format = "-%r-Mutt: %f [Msgs:%?M?%M/?%m%?n? New:%n?%?o? Old:%o?%?d? Del:%d?%?F? Flag:%F?%?t? Tag:%t?%?p? Post:%p?%?b? Inc:%b?%?l? %l?]---(%s/%S)-%>-(${hostname})-(%P)---"
+
+source "~/.mutt/gmail-common.rc"

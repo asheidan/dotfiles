@@ -1,0 +1,25 @@
+# General common settings for all gmail accounts
+
+set folder = "imaps://imap.gmail.com:993/"
+set smtp_url = "smtp://${imap_user}@smtp.gmail.com:587/"
+set smtp_pass = "${imap_pass}"
+
+set spoolfile = "=INBOX"
+set postponed = "=[GMail]/Drafts"
+unset record #= "=[GMail]/Sent Mail"
+set trash = "=[Gmail]/Trash"
+
+set imap_check_subscribed
+
+set header_cache=~/.mutt/cache/headers
+set message_cachedir=~/.mutt/cache/bodies
+set certificate_file=~/.mutt/certificates
+
+set move = no
+
+macro index,pager gi "<change-folder>!<enter>" "Go to inbox"
+macro index,pager ga "<change-folder>=[Gmail]/All Mail<enter>" "Go to all mail"
+macro index,pager gs "<change-folder>=[Gmail]/Starred<enter>" "Go to starred messages"
+macro index,pager gd "<change-folder>=[Gmail]/Drafts<enter>" "Go to drafts"
+macro index,pager gt '<change-folder>=[Gmail]/Sent<quote-char> Mail<enter>' "Go to sent"
+macro index,pager gj '<change-folder>=[Gmail]/Spam<enter>' "Go to junk"

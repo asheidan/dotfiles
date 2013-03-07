@@ -1,0 +1,8 @@
+text/html; elinks %s; nametemplate=%s.html; needsterminal
+# -assume_charset=UTF-8
+#text/html; lynx -image_links -dump %s; nametemplate=%s.html; copiousoutput
+text/html; elinks -dump %s; nametemplate=%s.html; copiousoutput
+
+image/*; background feh %s
+
+application/pdf; background evince %s
