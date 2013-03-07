@@ -1,8 +1,6 @@
 set fish_greeting
 
-
 if status -l
-	echo "Im a login shell"
 	if not set -q __fish_has_read_etcpaths
 		if [ -f "/usr/libexec/path_helper" ]
 			eval (/usr/libexec/path_helper -c | sed 's/[:"]/ /g')
@@ -17,7 +15,7 @@ if status -l
 end
 
 if not set -q __fish_prompt_user
-	set -g __fish_prompt_user (set_color --bold white)
+	set -g __fish_prompt_user (set_color normal)
 end
 
 if not set -q __fish_prompt_cwd
@@ -30,7 +28,7 @@ if not set -q __fish_prompt_contexts
 end
 
 if not set -q __fish_prompt_decorators
-	set -g __fish_prompt_decorators (set_color --bold black)
+	set -g __fish_prompt_decorators (set_color -o black)
 end
 
 function __extended_info -d "Small function that shows additional information"
@@ -40,7 +38,7 @@ function __extended_info -d "Small function that shows additional information"
 	# Clear line
 	echo
 	# Info
-	echo "Current directory:" (pwd)
+	echo "Current directory:" $PWD
 	if test -d .git
 		echo "Git repo"
 	end
@@ -51,6 +49,14 @@ function __extended_info -d "Small function that shows additional information"
 end
 
 function git_revision #{{{1
+	# Try to find out our current branch
+	set -l git_branch
+	set git_branch (git-revision 2> /dev/null)
+
+	if [ $status -eq 128 ]
+		# Not a repo
+		return
+	end
 	set -l git_dir
 	if [ -d .git ]
 		set git_dir "$PWD/.git"
@@ -62,11 +68,9 @@ function git_revision #{{{1
 		return
 	end
 
-	# Try to find out our current branch
-	set -l git_branch
-	if [ -z "$git_branch" ]; set git_branch (git symbolic-ref HEAD 2> /dev/null | sed 's_refs/heads/__'); end
-	if [ -z "$git_branch" ]; set git_branch (git describe --exact-match HEAD 2> /dev/null); end
-	if [ -z "$git_branch" ]; set git_branch (cut -c1-7 "$git_dir/HEAD")"..."; end
+	# if [ -z "$git_branch" ]; set git_branch (git symbolic-ref HEAD 2> /dev/null | sed 's_refs/heads/__'); end
+	# if [ -z "$git_branch" ]; set git_branch (git describe --exact-match HEAD 2> /dev/null); end
+	# if [ -z "$git_branch" ]; set git_branch (cut -c1-7 "$git_dir/HEAD")"..."; end
 
 	set -g git_repo
 	set git_repo (echo $git_dir | sed 's_/\.git$__')
@@ -115,28 +119,28 @@ function fish_prompt --description 'Write out the prompt'
 
 		case root
 
-		if not set -q __fish_prompt_cwd
-			if set -q fish_color_cwd_root
-				set -g __fish_prompt_cwd (set_color $fish_color_cwd_root)
-			else
-				set -g __fish_prompt_cwd (set_color $fish_color_cwd)
+			if not set -q __fish_prompt_cwd
+				if set -q fish_color_cwd_root
+					set -g __fish_prompt_cwd (set_color $fish_color_cwd_root)
+				else
+					set -g __fish_prompt_cwd (set_color $fish_color_cwd)
+				end
 			end
-		end
 
-		echo -n -s "$USER" @ "$__fish_prompt_hostname" ' ' "$__fish_prompt_cwd" (prompt_pwd) "$__fish_prompt_normal" '# '
+			echo -n -s "$USER" @ "$__fish_prompt_hostname" ' ' "$__fish_prompt_cwd" (prompt_pwd) "$__fish_prompt_normal" '# '
 
 		case '*'
 
-		set contexts (collect_contexts)
+			set contexts (collect_contexts)
 
-		# if [ 20 -lt (echo $contexts | wc -c) ]; echo; end
-		fish_prompt_info_put "$__fish_prompt_cwd" (path_format -bu "$git_repo")
-		for context in $contexts
-			fish_prompt_info_put "$__fish_prompt_contexts" "$context"
-		end
-		fish_prompt_info_put "$__fish_prompt_user" "$USER""$__fish_prompt_decorators"@"$__fish_prompt_user""$__fish_prompt_hostname"
-		echo
-		echo -n -s '[' "$__fish_prompt_normal" ' '
+			# if [ 20 -lt (echo $contexts | wc -c) ]; echo; end
+			fish_prompt_info_put "$__fish_prompt_cwd" (path_format -bu "$git_repo")
+			for context in $contexts
+				fish_prompt_info_put "$__fish_prompt_contexts" "$context"
+			end
+			fish_prompt_info_put "$__fish_prompt_user" "$USER""$__fish_prompt_decorators"@"$__fish_prompt_user""$__fish_prompt_hostname"
+			echo
+			echo -n -s '[' "$__fish_prompt_normal" ' '
 
 	end
 end
