@@ -1,8 +1,47 @@
 !*font: -*-lucidatypewriter-medium-*-*-*-10-*-*-*-*-*-iso8859-1
-!xterm*font: -*-lucidatypewriter-medium-*-*-*-10-*-*-*-*-*-iso8859-1
-!xterm*boldFont: -*-lucidatypewriter-medium-*-*-*-10-*-*-*-*-*-iso8859-1
-xterm*boldMode:	false
-xterm*cursorColor: magenta
-xterm*foreground: grey80
-xterm*background: black
+*xterm*font: -*-terminus-medium-r-*-*-*-*-*-*-*-*-iso8859-1
+*xterm*boldFont: -*-terminus-medium-r-*-*-*-*-*-*-*-*-iso8859-1
+*xterm*renderFont: true
+*xterm*faceName: ProFontWindows
+*xterm*faceSize: 9
+*xterm*boldMode:	false
+*xterm*allowBoldFonts: false
+*xterm*colorBDMode: true
+!*xterm*cursorColor: magenta
+!*xterm*foreground: grey80
+!*xterm*background: #19191d
 
+! Molokai theme
+*xterm*background: #19191d
+*xterm*foreground: #dddddd
+*xterm*cursorColor: #dddddd
+! Black
+*xterm*color0: #191911
+! Red
+*xterm*color1: #bd0d74
+! Green
+*xterm*color2: #9fc439
+! Yellow
+*xterm*color3: #e08a1f
+! Dark blue
+*xterm*color4: #238bcc
+! magenta
+*xterm*color5: #904ca8
+! cyan
+*xterm*color6: #3579a8
+! Gray90
+*xterm*color7: #9999aa
+*xterm*color8: #5a5a5a
+*xterm*color9: #ff0090
+*xterm*color10: #80ff00
+*xterm*color11: #ffba68
+*xterm*color12: #5f5fee
+*xterm*color13: #bb88dd
+*xterm*color14: #4eb4fa
+*xterm*color15: #d0d0d0
+
+*rxvt*font: xft:ProFontWindows:size=9:antialias=false
+*rxvt*boldFont: xft:ProFontWindows:size=9:antialias=false
+*rxvt*foreground: grey80
+*rxvt*background: black
+*rxvt*scrollBar: false

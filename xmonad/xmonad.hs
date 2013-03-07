@@ -1,27 +1,39 @@
-import XMonad
-import XMonad.Hooks.DynamicLog
-import XMonad.Hooks.ManageDocks
-import XMonad.Util.Run(spawnPipe)
-import XMonad.Util.EZConfig(additionalKeysP)
-import XMonad.Layout.IM
-import XMonad.Layout.Magnifier
-import XMonad.Layout.PerWorkspace
-import XMonad.Layout.ThreeColumns
-import XMonad.Layout.Column
-import XMonad.Layout.ToggleLayouts
-import XMonad.Layout.Reflect
-import XMonad.Layout.Combo
-import XMonad.Layout.Tabbed
-import XMonad.Layout.TwoPane
-import XMonad.Layout.LayoutScreens
-import XMonad.Layout.FixedColumn
 import Data.Ratio ((%))
 import System.IO
+import XMonad
+import XMonad.Actions.UpdatePointer
+import XMonad.Hooks.DynamicLog
+import XMonad.Hooks.EwmhDesktops
+import XMonad.Hooks.ManageDocks
+import XMonad.Layout.Column
+import XMonad.Layout.Combo
+import XMonad.Layout.FixedColumn
+import XMonad.Layout.IM
+import XMonad.Layout.LayoutScreens
+import XMonad.Layout.Magnifier
+import XMonad.Layout.PerWorkspace
+import XMonad.Layout.Reflect
+import XMonad.Layout.Tabbed
+import XMonad.Layout.ThreeColumns
+import XMonad.Layout.ToggleLayouts
+import XMonad.Layout.TwoPane
+import XMonad.Util.EZConfig(additionalKeysP,removeKeysP)
+import XMonad.Util.Run(spawnPipe)
+
+import qualified XMonad.StackSet as W
+import XMonad.Actions.CycleWS
+--import XMonad.Util.Scratchpad
+import XMonad.Util.WorkspaceCompare
 
 myManageHook = composeAll
-	[ ]
+	[ className =? "Pinentry-x11" --> doFloat -- WM_CLASS(STRING) = "pinentry-x11", "Pinentry-x11"
+	, className =? "Pinentry-gtk-2" --> doFloat
+	, className =? "XMessage" --> doFloat
+	, className =? "Spotify" --> doShift "+"
+	]
 
-myWorkspaces = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
+myWorkspaces :: [WorkspaceId]
+myWorkspaces = map show [1 .. 9 :: Int]
 
 myLayout = toggleLayouts Full perWS 
 	where
@@ -56,25 +68,58 @@ myLayout = toggleLayouts Full perWS
 myNormalBorderColor = "#101010"
 myFocusedBorderColor = "#707280"
 
+home = "/home/emil/"
+
 main = do
 	xmproc <- spawnPipe "/usr/bin/xmobar /home/emil/.xmobarrc"
-	xmonad $ defaultConfig
+	trayproc <- spawnPipe "killall trayer; trayer --edge top --align right --monitor primary --SetDockType true --SetPartialStrut true --expand true --widthtype request --transparent true --tint 0x000000 --alpha 0 --distancefrom right --distance 380 --height 14"
+	spawn "xsetroot -cursor_name arrow"
+	xmonad $ ewmh defaultConfig
 		{ manageHook = manageDocks <+> myManageHook <+> manageHook defaultConfig
 		, layoutHook = myLayout
-		, logHook = dynamicLogWithPP $ xmobarPP
-			{ ppOutput = hPutStrLn xmproc
-			, ppTitle = xmobarColor "green" "" . shorten 50
-			}
+		, logHook = do
+			dynamicLogWithPP $ xmobarPP
+				{ ppOutput = hPutStrLn xmproc
+				, ppTitle = xmobarColor "#9fc439" "" . shorten 80
+				, ppCurrent = xmobarColor "#e08a1f" "" . wrap "[" "]"
+				, ppUrgent = xmobarColor "#bd0d74" ""
+				, ppSep = " | "
+				}
+			updatePointer (TowardsCentre 0.05 0.05) -- (Relative 0.5 0.5) is center
 		, workspaces = myWorkspaces
 		, modMask = mod4Mask     -- Rebind Mod to the Windows key
 		, normalBorderColor = myNormalBorderColor
 		, focusedBorderColor = myFocusedBorderColor
 		, focusFollowsMouse = True
-		, terminal = "gnome-terminal"
-		} `additionalKeysP`
-		[
-		  ("<xK_Print>", spawn "scrot")
-		, ("M1-C-l", spawn "gnome-screensaver-command -l")
-		, ("M1-C-0", layoutScreens 3 (combineTwo (TwoPane 0 0.6313) (TwoPane 0 0.4157) (Full)))
-		, ("M1-C-9", rescreen)
+		, terminal = "uxterm" -- was "gnome-terminal"
+		}
+		`removeKeysP`
+		[ "M-<Space>"
+		, "M-S-<Space>"
+		, "M-p"
+		, "M-S-p"
+		]
+		`additionalKeysP`
+		[ ("<xK_Print>", spawn "scrot")
+		, ("M-<Space>", spawn "dmenu_run")
+		, ("M-S-<Space>", spawn "gmrun")
+		, ("M-p", sendMessage NextLayout)
+		--, ("M-S-p", setLayout $ XMonad.layoutHook conf)
+		, ("M-<F7>", spawn "/home/emil/bin/spotify.sh previous")
+		, ("M-<F8>", spawn "/home/emil/bin/spotify.sh playpause")
+		, ("M-<F9>", spawn "/home/emil/bin/spotify.sh next")
+		, ("M-C-l", spawn "gnome-screensaver-command -l")
+		, ("M-x c", spawn "chromium-browser")
+		, ("M-x m", spawn "xmutt")
+		, ("M-x i", spawn "irc")
+		, ("M-x s", spawn "spotify")
+		--, ("M-<Space>", spawn "gnome-screensaver-command -l")
+		, ("M-C-0", layoutScreens 2 (TwoPane 0.5 0.5))
+		, ("M-C-9", rescreen)
+		-- focus HiddenNonEmpty wss except scratchpad
+		, ("M-<Right>",
+			windows . W.greedyView =<< findWorkspace getSortByIndex Next HiddenNonEmptyWS 1)
+		, ("M-<Left>",
+			windows . W.greedyView =<< findWorkspace getSortByIndex Prev HiddenNonEmptyWS 1)
+		-- http://www.haskell.org/haskellwiki/Xmonad/General_xmonad.hs_config_tips#Using_Next_Previous_Recent_Workspaces_rather_than_mod-n
 		]
