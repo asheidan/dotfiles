@@ -69,7 +69,7 @@ function git_revision #{{{1
 	if [ -z "$git_branch" ]; set git_branch (cut -c1-7 "$git_dir/HEAD")"..."; end
 
 	set -g git_repo
-	set git_repo (echo $git_dir | sed 's_/\.git$__')
+	set git_repo (echo $git_dir | sed 's_/\.git$__')
 	# echo $git_repo > /dev/stderr
 	
 	echo $git_branch

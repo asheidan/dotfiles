@@ -15,7 +15,6 @@ int main(int argc, char **argv)
 {
 	const char *home = getenv("HOME");
 	char *pwd  = strdup(getenv("PWD"));
-	char *p = pwd;
 
 	char result_buffer[LENGTH];
 	char cache_buffer[LENGTH];
