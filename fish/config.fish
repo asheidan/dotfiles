@@ -85,6 +85,7 @@ function collect_contexts -d "Returns a space separated list of contexts" #{{{1
 	set context_list
 	if [ -n "$virtualenv" ]; set context_list $context_list "v:$virtualenv"; end
 	if [ -n "$git_rev" ]; set context_list $context_list "g:$git_rev"; end
+	if [ -n "$RANGER_LEVEL" ]; set context_list $context_list "R"; end
 	for context in $context_list
 		echo $context
 	end | sort
