@@ -1,0 +1,26 @@
+Config
+	{ font = "xft:ProFontWindows:size=9"
+	, bgColor = "grey05", fgColor = "grey50"
+	, position = TopW L 100
+	, lowerOnStart = True
+	, commands =
+		[ Run Cpu ["-L","3","-H","50","--normal","#9fc439","--high","#bd0d74"] 20
+		, Run Memory ["-t","Mem: <usedratio>%"] 200
+		, Run Battery
+			[ "-t", "<acstatus>: <left>% (<timeleft>)"
+			, "--High","99","--high","#9fc439"
+			, "--Low","25","--low","#bd0d74"
+			, "--"
+			, "-O", "AC" , "-o", "Bat"
+			, "-f", "/sys/class/power_supply/ACAD/online"
+			] 100
+		, Run Date "%a %b %_d <fc=#e08a1f>%H:%M</fc>" "date" 300
+		, Run Com "bin/spotify.sh" ["song"] "spotify" 5
+		, Run Com "audtool" ["--current-song"] "audacious" 5
+		--, Run Com "date" ["+\"%a %b %_d %H:%M\""] "mydate" 600
+		, Run StdinReader
+		]
+	, sepChar = "%"
+	, alignSep = "}{"
+	, template = "%StdinReader% | %spotify% }{ %cpu% | %memory% | %battery% | %date% "
+}
