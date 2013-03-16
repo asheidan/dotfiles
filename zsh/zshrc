@@ -1,16 +1,34 @@
-# The following lines were added by compinstall
+fpath=(/usr/local/share/zsh-completions/ $fpath)
+
+export PATH="${HOME}/bin:${PATH}"
+
+autoload -U colors; colors
+autoload zsh/terminfo
 
 zstyle ':completion:*' completer _complete _match _approximate
 zstyle ':completion:*:max-errors:*' original only
 zstyle ':completion:*:approximate:*' max-errors 1 numeric
 zstyle ':completion:*' group-name ''
-#zstyle ':completion:*' list-colors ''
+zstyle ':completion:*' list-colors ''
 zstyle ':completion:*' matcher-list '+' 'm:{a-zA-Z}={A-Za-z}'
 zstyle ':completion:*' menu select
 zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
-zstyle :compinstall filename '/home/emil/.zshrc'
+#zstyle :compinstall filename "${HOME}/.zshrc"
 
 autoload -Uz compinit; compinit
+
+autoload -Uz vcs_info
+zstyle ':vcs_info:*' enable git svn
+zstyle ':vcs_info:*' check-for-changes true
+zstyle ':vcs_info:*' max-exports 3
+zstyle ':vcs_info:*' unstagedstr 'U'
+zstyle ':vcs_info:*' stagedstr 'S'
+zstyle ':vcs_info:*' actionformats " [%s:%b:%a]" '%R'
+if [[ "4.3.9" == "${ZSH_VERSION}" ]]; then
+	zstyle ':vcs_info:*' formats " %{${fg_bold[grey]}%}%1>>%s%>>[%{${fg_no_bold[green]}%}%b%{${fg_bold[grey]}%}]%{${fg_no_bold[default]}%}" '%R'
+else
+	zstyle ':vcs_info:*' formats " %{${fg_bold[grey]}%}%1>>%s%>>[%{${fg_no_bold[green]}%}%b%{${fg_bold[grey]}%}%c%u]%{${fg_no_bold[default]}%}" '%R' '%S'
+fi
 
 setopt COMPLETE_IN_WORD
 setopt INTERACTIVE_COMMENTS
@@ -18,14 +36,12 @@ setopt LIST_PACKED
 setopt EXTENDED_GLOB
 setopt NO_HUP
 #setopt MULTIBYTE
-#setopt PROMPT_SUBST
+setopt PROMPT_SUBST
 
 HISTFILE=~/.histfile
 HISTSIZE=1000
 SAVEHIST=1000
 bindkey -e
-
-autoload -U colors; colors
 
 # Git-prompt
 #__git_prompt_info() {
@@ -33,77 +49,40 @@ autoload -U colors; colors
 #	echo "[${ref#refs/heads/}]"
 #}
 
+function virtualenv_info () {
+	[ ${VIRTUAL_ENV} ] && print " %{${fg_bold[grey]}%}env[%{${fg_no_bold[green]}%}"$(basename "${VIRTUAL_ENV}")"%{${fg_bold[grey]}%}]"
+}
+
+function path_shorten () {
+	a=("${(s:/:)1}")
+	result=()
+	for name in $a
+	do
+		result+=${name[1,3]}
+	done
+	print $result
+}
+function path_format () {
+	if [ -z "${2}" ]; then
+		print "${1}"
+	else
+		if [ -n "${3}" ]; then
+			sub="/${3/%./}"
+			sub="${sub/%\//}"
+		fi
+		dir=$(dirname "${2}")
+		base=$(basename "${2}")
+		print "${dir/#$HOME/~}/%U%B${base}%b%u%{${fg_no_bold[magenta]%}${sub}"
+	fi
+}
 
 #bindkey -M menuselect '^o' accept-and-infer-next-history
-
-precmd () {
-	local get_dir branch
- 
-	case $TERM in
-		xterm*|screen|ansi|rxvt)
-			#print -Pn "\e]0;%m:%20<..<%~%<<\a"
-			print -Pn "\e]0;%m:%~%<<\a"
-		;;
-	esac
-
-	psvar=()
-	git_dir=$(git rev-parse --git-dir 2> /dev/null) || return
-	if test -d "$git_dir/../.dotest"; then
-		if test -f "$git_dir/../.dotest/rebasing"; then
-			psvar[3]="rebase"
-		elif test -f "$git_dir/../.dotest/applying"; then
-			psvar[3]="am"
-		else
-			psvar[3]="am/rebase"
-		fi
-		branch="$(git symbolic-ref HEAD 2>/dev/null)"
-	elif test -f "$git_dir/.dotest-merge/interactive"; then
-		psvar[3]="rebase -i"
-		branch="$(cat "$git_dir/.dotest-merge/head-name")"
-	elif test -d "$git_dir/.dotest-merge"; then
-		psvar[3]="rebase -m"
-		branch="$(cat "$git_dir/.dotest-merge/head-name")"
-	elif test -f "$git_dir/MERGE_HEAD"; then
-		psvar[3]="merge"
-		branch="$(git symbolic-ref HEAD 2>/dev/null)"
-	else
-		test -f "$git_dir/BISECT_LOG" && psvar[3]="bisect"
-		branch="$(git symbolic-ref HEAD 2>/dev/null)" || \
-			branch="$(git describe --exact-match HEAD 2>/dev/null)" || \
-			branch="$(cut -c1-7 "$git_dir/HEAD")..."
-	fi
-
-	psvar[1]="${$(readlink ${git_dir:h})/$HOME/~}"
-	psvar[2]="${branch#refs/heads/}"
-	case $git_dir in
-		.git)
-			psvar[3]="${PWD##*/}"
-			psvar[4]="/"
-			;;
-		*)
-			psvar[3]="$(echo ${git_dir%/.git} | sed 's_.*/__')"
-			psvar[4]="/${PWD#${git_dir%.git}}"
-			;;
-	esac
-
-}
-
-# Screen name
-preexec () {
-	if [[ "$TERM" == "screen" ]]; then
-	local CMD=${1[(wr)^(*=*|sudo|-*)]}
-	echo -ne "\ek$CMD\e\\"
-	fi
-
-	# tput cuu1
-	# print -P -- "%{${fg_bold[grey]}%}[${HOST[1]}]${USER[1]}:%c%#%{${fg_no_bold[default]}%} "
-}
 
 case $HOST in
 	[Ww]hite*)
 		prc="yellow"
 		;;
-	abbey|mate|submarine|tv|*.bigfist.net|Abbey*|black)
+	mate|submarine|tv|*.bigfist.net|black)
 		prc="magenta"
 		;;
 	salt|*.cs.umu.se)
@@ -120,20 +99,31 @@ case $HOST in
 		;;
 esac
 
-
-RPROMPT="%{${fg_bold[grey]}%}%(1v.%2v@%3v:%4v.%~)%{${fg_no_bold[default]}%}"
+#RPROMPT="%{${fg_bold[grey]}%}%(1v.%2v@%3v:%4v.%~)%{${fg_no_bold[default]}%}"
 
 #PROMPT="%{${fg_bold[grey]}%}[%{${fg_no_bold[green]}%}%m%{${fg_bold[grey]}%}] %{${fg_bold[white]}%}%n%{${fg_bold[grey]}%}:%{${fg_bold[green]}%}%c%{${fg_bold[grey]}%}%#%{${fg_no_bold[default]}%} "
-PROMPT="%{${fg_bold[grey]}%}[%{${fg_no_bold[$prc]}%}${HOST[1]}%{${fg_bold[grey]}%}]%{${fg_bold[white]}%}${USER[1]}%{${fg_bold[grey]}%}:%{${fg_bold[$prc]}%}%c%{${fg_bold[grey]}%}%#%{${fg_no_bold[default]}%} "
+#PROMPT="%{${fg_bold[grey]}%}[%{${fg_no_bold[$prc]}%}${HOST[1]}%{${fg_bold[grey]}%}]%{${fg_bold[white]}%}${USER[1]}%{${fg_bold[grey]}%}:%{${fg_bold[$prc]}%}%c%{${fg_bold[grey]}%}%#%{${fg_no_bold[default]}%} "
+
+# Working directory
+_PROMPT="%{${fg_bold[grey]}%}[%{${fg_no_bold[magenta]}%}"'$(path_format %~ ${vcs_info_msg_1_} ${vcs_info_msg_2_})'"%{${fg_bold[grey]}%}]"
+# vcs_info
+_PROMPT="${_PROMPT}"'${vcs_info_msg_0_}'
+# virtualenv_info
+_PROMPT="${_PROMPT}"'$(virtualenv_info)'
+# User@host
+_PROMPT="${_PROMPT} %{${fg_bold[grey]}%}[%{${fg_no_bold[white]}%}%n%{${fg_bold[grey]}%}@%{${fg_no_bold[${prc}]}%}%m%{${fg_bold[grey]}%}]%{${fg_no_bold[default]}%}"
+
+PROMPT="%{${fg_bold[grey]}%}[%{${fg_no_bold[default]}%} "
+RPROMPT=" %{${fg_bold[grey]}%}]%{${fg_no_bold[default]}%}"
 
 alias ls='ls -G -F'
 #alias ls='ls --color=auto -F'
 
 # Rails aliases
-alias sgen="script/generate"
-alias sserv="script/server"
-alias scon="script/console"
-alias splug="script/plugin"
+#alias sgen="script/generate"
+#alias sserv="script/server"
+#alias scon="script/console"
+#alias splug="script/plugin"
 
 # Projects
 p() {
@@ -154,3 +144,26 @@ p() {
 			;;
 	esac
 }
+
+precmd () {
+	#local get_dir branch
+	vcs_info
+	print -rP "${_PROMPT}"
+}
+
+# Screen name
+preexec () {
+	if [[ "$TERM" == "screen" ]]; then
+	local CMD=${1[(wr)^(*=*|sudo|-*)]}
+	echo -ne "\ek$CMD\e\\"
+	fi
+
+	# tput cuu1
+	# print -P -- "%{${fg_bold[grey]}%}[${HOST[1]}]${USER[1]}:%c%#%{${fg_no_bold[default]}%} "
+}
+
+source "${HOME}/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+ZSH_HIGHLIGHT_STYLES[globbing]='fg=yellow'
+#ZSH_HIGHLIGHT_STYLES[path]='fg=cyan'
+
+source "${HOME}/.zsh/zsh-history-substring-search/zsh-history-substring-search.zsh"
