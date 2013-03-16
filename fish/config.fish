@@ -5,12 +5,12 @@ if status -l
 		if [ -f "/usr/libexec/path_helper" ]
 			eval (/usr/libexec/path_helper -c | sed 's/[:"]/ /g')
 		end
-		set -gx __fish_has_read_etcpaths
-	end
-	if not contains "$HOME/bin" $PATH
-		if test -d $HOME/bin
-			set -x PATH $HOME/bin $PATH
+		if not contains "$HOME/bin" $PATH
+			if test -d $HOME/bin
+				set -x PATH $HOME/bin $PATH
+			end
 		end
+		set -gx __fish_has_read_etcpaths
 	end
 end
 
