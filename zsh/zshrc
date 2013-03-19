@@ -53,48 +53,6 @@ function virtualenv_info () {
 	[ ${VIRTUAL_ENV} ] && print " %{${fg_bold[grey]}%}env[%{${fg_no_bold[green]}%}"$(basename "${VIRTUAL_ENV}")"%{${fg_bold[grey]}%}]"
 }
 
-function path_shorten () {
-	local split result last_element
-
-	split=("${(s:/:)1}")
-	result=()
-
-	last_element=${split[-1]}
-
-	for name in ${split}
-	do
-		result+=$(print -P "%4>~>${name}%>>")
-	done
-
-	if [[ -z "${2}" ]]; then
-		result[-1]=${last_element}
-	fi
-
-	print "${(j:/:)result}"
-}
-
-function path_format () {
-	if [[ -z "${2}" ]]; then
-		print "${1}"
-	else
-		result=()
-		if [[ -n "${3}" ]]; then
-			sub="${3%.}"
-			sub="${sub%/}"
-		fi
-		dir=$(dirname "${2}")
-		base=$(basename "${2}")
-
-		result+="$(path_shorten ${dir/#$HOME/~} f)"
-
-		result+="%U${base}%u"
-
-		[[ -n "${sub}" ]] && result+="$(path_shorten ${sub})"
-
-		print "${(j:/:)result}"
-	fi
-}
-
 #bindkey -M menuselect '^o' accept-and-infer-next-history
 
 case $HOST in
@@ -118,13 +76,15 @@ case $HOST in
 		;;
 esac
 
+source "${HOME}/.zsh/fish-path/fish-path.zsh"
+
 #RPROMPT="%{${fg_bold[grey]}%}%(1v.%2v@%3v:%4v.%~)%{${fg_no_bold[default]}%}"
 
 #PROMPT="%{${fg_bold[grey]}%}[%{${fg_no_bold[green]}%}%m%{${fg_bold[grey]}%}] %{${fg_bold[white]}%}%n%{${fg_bold[grey]}%}:%{${fg_bold[green]}%}%c%{${fg_bold[grey]}%}%#%{${fg_no_bold[default]}%} "
 #PROMPT="%{${fg_bold[grey]}%}[%{${fg_no_bold[$prc]}%}${HOST[1]}%{${fg_bold[grey]}%}]%{${fg_bold[white]}%}${USER[1]}%{${fg_bold[grey]}%}:%{${fg_bold[$prc]}%}%c%{${fg_bold[grey]}%}%#%{${fg_no_bold[default]}%} "
 
 # Working directory
-_PROMPT="%{${fg_bold[grey]}%}[%{${fg_no_bold[magenta]}%}"'$(path_format %~ ${vcs_info_msg_1_} ${vcs_info_msg_2_})'"%{${fg_bold[grey]}%}]"
+_PROMPT="%{${fg_bold[grey]}%}[%{${fg_no_bold[magenta]}%}"'$(path_format "$(pwd)" ${vcs_info_msg_1_} ${vcs_info_msg_2_})'"%{${fg_bold[grey]}%}]"
 # vcs_info
 _PROMPT="${_PROMPT}"'${vcs_info_msg_0_}'
 # virtualenv_info
