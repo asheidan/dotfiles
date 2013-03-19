@@ -8,11 +8,17 @@ autoload zsh/terminfo
 zstyle ':completion:*' completer _complete _match _approximate
 zstyle ':completion:*:max-errors:*' original only
 zstyle ':completion:*:approximate:*' max-errors 1 numeric
-zstyle ':completion:*' group-name ''
+#zstyle ':completion:*' group-name ''
 zstyle ':completion:*' list-colors ''
 zstyle ':completion:*' matcher-list '+' 'm:{a-zA-Z}={A-Za-z}'
 zstyle ':completion:*' menu select
 zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
+
+zstyle ':completion:*:named-directories' group-name 'named-directories'
+zstyle ':completion:*:-tilde-:*' group-order 'named-directories' 'path-directories' 'users' 'expand'
+zstyle ':completion:*:-tilde-:*' ignored-patterns '_*'
+
+zstyle ':completion:*' special-dirs '..'
 #zstyle :compinstall filename "${HOME}/.zshrc"
 
 autoload -Uz compinit; compinit
@@ -84,7 +90,7 @@ source "${HOME}/.zsh/fish-path/fish-path.zsh"
 #PROMPT="%{${fg_bold[grey]}%}[%{${fg_no_bold[$prc]}%}${HOST[1]}%{${fg_bold[grey]}%}]%{${fg_bold[white]}%}${USER[1]}%{${fg_bold[grey]}%}:%{${fg_bold[$prc]}%}%c%{${fg_bold[grey]}%}%#%{${fg_no_bold[default]}%} "
 
 # Working directory
-_PROMPT="%{${fg_bold[grey]}%}[%{${fg_no_bold[magenta]}%}"'$(path_format "$(pwd)" ${vcs_info_msg_1_} ${vcs_info_msg_2_})'"%{${fg_bold[grey]}%}]"
+_PROMPT="%{${fg_bold[grey]}%}[%{${fg_no_bold[magenta]}%}"'$(path_format "%~" ${vcs_info_msg_1_} ${vcs_info_msg_2_})'"%{${fg_bold[grey]}%}]"
 # vcs_info
 _PROMPT="${_PROMPT}"'${vcs_info_msg_0_}'
 # virtualenv_info
@@ -146,3 +152,31 @@ ZSH_HIGHLIGHT_STYLES[globbing]='fg=yellow'
 #ZSH_HIGHLIGHT_STYLES[path]='fg=cyan'
 
 source "${HOME}/.zsh/zsh-history-substring-search/zsh-history-substring-search.zsh"
+#source "${HOME}/.zsh/make-dir-complete/make-dir-complete.plugin.zsh"
+
+typeset -A NAMED_DIRS
+NAMED_DIRS=(
+	note	~/Dropbox/Notes
+	drop	~/Dropbox
+	mill	~/Documents/Codemill
+	dot	~/Documents/Projects/dotfiles
+	proj	~/Documents/Projects
+	edu	~/Documents/Education
+)
+for key in ${(k)NAMED_DIRS}
+do
+	if [[ -d "${NAMED_DIRS[$key]}" ]]; then
+		export $key="${NAMED_DIRS[$key]}"
+		: ~$key
+	else
+		unset "NAMED_DIRS[$key]"
+	fi
+done
+#: ${(k)NAMED_DIRS}
+
+function namedirs () {
+	for key in ${(k)NAMED_DIRS}
+	do
+		printf "%-10s %s\n" "${key}" "${NAMED_DIRS[$key]}"
+	done
+}
