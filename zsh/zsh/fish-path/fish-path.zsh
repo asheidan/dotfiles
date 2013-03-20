@@ -16,7 +16,7 @@ function tilde_contraction () {
 		fi
 	done
 
-	print ${dir}
+	print ${dir/#${HOME}/\~}
 }
 
 function path_shorten () {
