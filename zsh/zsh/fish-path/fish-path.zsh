@@ -28,7 +28,11 @@ function path_shorten () {
 
 	for ((i=1; i <= ${#split}; i++))
 	do
-		result+=$(print -P "%${ZSH_FISHPROMPT_STYLE[shortlen]}>${ZSH_FISHPROMPT_STYLE[shortstr]}>${split[$i]}%>>")
+		if [[ "${split[$i][1]}" != '~' ]]; then
+			result+=$(print -P "%${ZSH_FISHPROMPT_STYLE[shortlen]}>${ZSH_FISHPROMPT_STYLE[shortstr]}>${split[$i]}%>>")
+		else
+			result+="${split[$i]}"
+		fi
 	done
 
 	if [[ -z "${2}" ]]; then
