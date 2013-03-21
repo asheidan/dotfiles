@@ -45,7 +45,7 @@ function path_shorten () {
 function path_format () {
 	local sub result dir base
 	if [[ -z "${2}" ]]; then
-		print "$(path_shorten $(print -P ${1}))"
+		print $(path_shorten "$(print -P ${1})")
 	else
 		result=()
 		if [[ -n "${3}" ]]; then
