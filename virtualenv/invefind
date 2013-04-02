@@ -1,0 +1,19 @@
+#!/bin/bash
+
+echo "Searching for inve-script..."
+
+inve=$(find * -wholename '*/bin/inve')
+
+if [[ -z "${inve}" ]]; then
+	echo "Couldn't find an inve-script"
+	exit -1
+fi
+
+if [[ $(echo "${inve}" | wc -l) > 1 ]]; then
+	echo "Found several scripts:"
+	echo "${inve}" | sed "s/^/\t/"
+	exit -2
+fi
+
+echo "Found inve at ${inve}"
+"${inve}"
