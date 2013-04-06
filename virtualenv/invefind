@@ -16,4 +16,4 @@ if [[ $(echo "${inve}" | wc -l) > 1 ]]; then
 fi
 
 echo "Found inve at ${inve}"
-"${inve}"
+"${inve}" $@
