@@ -1,0 +1,22 @@
+{
+	"installed_packages":
+	[
+		"CTags",
+		"Djaneiro",
+		"Function Name Display",
+		"Git",
+		"GitGutter",
+		"GotoOpenFile",
+		"Meld diff",
+		"Package Control",
+		"SideBarGit",
+		"Surround",
+		"SyncedSideBar",
+		"Syntax Highlighting for Sass",
+		"Theme - Soda",
+		"ToggleMinimapOnScroll",
+		"ToggleSettings",
+		"Vintage Surround",
+		"VintageEx"
+	]
+}

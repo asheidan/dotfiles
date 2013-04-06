@@ -1,0 +1,50 @@
+{
+	"color_scheme": "Packages/Filmgirl/Espresso Tutti.tmTheme",
+	"draw_indent_guides": true,
+	"file_exclude_patterns":
+	[
+		"*~",
+		".*.sw?",
+		"*.pyc",
+		"*.pyo",
+		"*.exe",
+		"*.dll",
+		"*.obj",
+		"*.o",
+		"*.a",
+		"*.lib",
+		"*.so",
+		"*.dylib",
+		"*.ncb",
+		"*.sdf",
+		"*.suo",
+		"*.pdb",
+		"*.idb",
+		".DS_Store",
+		"*.class",
+		"*.psd",
+		"*.db"
+	],
+	"folder_exclude_patterns":
+	[
+		".svn",
+		".git",
+		".hg",
+		"CVS"
+	],
+	"font_face": "ProfontWindows",
+	"font_options": "no_antialias",
+	"font_size": 9,
+	"ignored_packages":
+	[
+	],
+	"indent_guide_options":
+	[
+		"draw_normal"
+	],
+	"line_numbers": false,
+	"overlay_scroll_bars": "enabled",
+	"reveal-on-activate": false,
+	"theme": "Soda Light.sublime-theme",
+	"vintage_start_in_command_mode": true
+}
