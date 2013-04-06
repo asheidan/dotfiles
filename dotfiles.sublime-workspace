@@ -1,0 +1,875 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"class",
+				"classmethod"
+			],
+			[
+				"if",
+				"ifmain	if __name__ == '__main__'"
+			],
+			[
+				"conta",
+				"contact_form"
+			],
+			[
+				"coi",
+				"choices"
+			],
+			[
+				"error_",
+				"error_messages"
+			],
+			[
+				"Group",
+				"GroupForm"
+			],
+			[
+				"P",
+				"POST"
+			],
+			[
+				"se",
+				"sessions"
+			],
+			[
+				"is_",
+				"is_valid"
+			],
+			[
+				"CMD",
+				"CMDPROMPT"
+			],
+			[
+				"vi",
+				"vicmd"
+			],
+			[
+				"INS",
+				"INSPROMPT"
+			],
+			[
+				"zle-",
+				"zle-keymap-select"
+			],
+			[
+				"RP",
+				"RPROMPT"
+			],
+			[
+				"visi",
+				"visible"
+			],
+			[
+				"he",
+				"help_text"
+			],
+			[
+				"label",
+				"label_suffix"
+			],
+			[
+				"max",
+				"max_length"
+			],
+			[
+				"u",
+				"ul	Tag"
+			],
+			[
+				"c",
+				"ctrl"
+			],
+			[
+				"conte",
+				"context_instance"
+			],
+			[
+				"Docum",
+				"DocumentSessionForm"
+			],
+			[
+				"Model",
+				"ModelForm	ModelForm"
+			],
+			[
+				"Doc",
+				"DocumentSession"
+			],
+			[
+				"no",
+				"now"
+			],
+			[
+				"datetime",
+				"datetime"
+			],
+			[
+				"rende",
+				"rendered_widgets"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"contents": "#!/usr/bin/env python\n\nimport sys\nimport os\nfrom subprocess import call\nfrom ConfigParser import SafeConfigParser\n\nclass color:\n	@classmethod\n	def blue(cls, string):\n		return \"\\033[00;34m%s\\033[0m\" % string\n\n	@classmethod\n	def yellow(cls, string):\n		return \"\\033[00;33m%s\\033[0m\" % string\n\n	@classmethod\n	def green(cls, string):\n		return \"\\033[00;32m%s\\033[0m\" % string\n\n	@classmethod\n	def red(cls, string):\n		return \"\\033[00;31m%s\\033[0m\" % string\n\nclass log:\n	@classmethod\n	def info(cls, text):\n		print(\"  [ %s ] %s\" % (color.blue(\"..\"),text))\n\n	@classmethod\n	def user(cls, text):\n		print(\"\\r  [ %s ] %s\" % (color.yellow(\"??\"),text))\n\n	@classmethod\n	def success(cls, text):\n		print(\"\\r\\033[2K  [ %s ] %s\" % (color.green(\"OK\"),text))\n\n	@classmethod\n	def fail(cls, text):\n		print(\"\\r\\033[2K  [%s] %s\" % (color.red(\"FAIL\"),text))\n		sys.exit(1)\n\n	@classmethod\n	def log(cls, text):\n		print(\"         %s\" % text)\n\nclass Parser(SafeConfigParser):\n	defaults = {\n		\"home\": os.environ[\"HOME\"],\n		\"dir\": \n	}\n	def __init__(self):\n		SafeConfigParser.__init__(self, defaults=self.defaults,allow_no_value=True)\n\ndef run(command, shell=True, verbose=True):\n	\"\"\" Run a command and return the return code \"\"\"\n	if type(command) is not list:\n		command = [command]\n\n	result = call(command, shell)\n\n	if(verbose):\n		log.log(' '.join(command))\n\n	return result\n\ndef link(source, target, verbose=False):\n	\"\"\" Symlink source to target \"\"\"\n	#return run([\"ln\",\"-s\",source, target], verbose)\n	try:\n		if (verbose): log.log(\"ln -s %s %s\" % (source, target))\n		os.symlink(source, target)\n		return True\n	except OSError as e:\n		log.fail(e.strerror)\n\nif __name__ == '__main__':\n	config = Parser()\n	config.read(\"sublime2/setup.conf\")\n\n	symlinks = [k for k,v in config.items(\"symlinks\") if v == \"auto\"]\n	for link in symlinks:\n		print config.get(link, 'source')\n		print config.get(link, 'target')\n",
+			"file": "dotfiles",
+			"file_size": 1849,
+			"file_write_time": 1365261862000000,
+			"settings":
+			{
+				"buffer_size": 1860,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "{\n	\"symlinks\": [\n		[]\n	]\n}",
+			"settings":
+			{
+				"buffer_size": 26,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/emil/.gitconfig",
+			"settings":
+			{
+				"buffer_size": 456,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "sublime2/setup.conf",
+			"settings":
+			{
+				"buffer_size": 122,
+				"line_ending": "Unix",
+				"name": "[symlinks]"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 56.0,
+		"selected_items":
+		[
+			[
+				"json",
+				"Set Syntax: JSON"
+			],
+			[
+				"surrou",
+				"Surround: surround selection"
+			],
+			[
+				"sidebar",
+				"View: Toggle Side Bar"
+			],
+			[
+				"packa",
+				"Package Control: Upgrade Package"
+			],
+			[
+				"gblame",
+				"Git: Blame"
+			],
+			[
+				"syntax css",
+				"Set Syntax: CSS"
+			],
+			[
+				"blame",
+				"Set Syntax: Git Blame"
+			],
+			[
+				"listpacka",
+				"Package Control: List Packages"
+			],
+			[
+				"toggleopen",
+				"View: Toggle Open Files in Side Bar"
+			],
+			[
+				"git blam",
+				"Git: Blame"
+			],
+			[
+				"gitbranch",
+				"Git: New Branch"
+			],
+			[
+				"toggside",
+				"View: Toggle Side Bar"
+			],
+			[
+				"git commit",
+				"Git: Commit"
+			],
+			[
+				"gitnew",
+				"Git: New Branch"
+			],
+			[
+				"gitadd",
+				"Git: Add Current File"
+			],
+			[
+				"gitstat",
+				"Git: Status"
+			],
+			[
+				"view",
+				"View: Toggle Open Files in Side Bar"
+			],
+			[
+				"status",
+				"View: Toggle Status Bar"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"remove",
+				"Package Control: Remove Package"
+			],
+			[
+				"list",
+				"Package Control: List Packages"
+			],
+			[
+				"markdown",
+				"Markdown Preview: preview in Browser"
+			],
+			[
+				"viewfiles",
+				"View: Toggle Open Files in Side Bar"
+			],
+			[
+				"gitgitk",
+				"Git: Gitk"
+			],
+			[
+				"shell",
+				"Set Syntax: Shell Script (Bash)"
+			],
+			[
+				"tabs",
+				"View: Toggle Tabs"
+			],
+			[
+				"surround",
+				"Surround: surround selection"
+			],
+			[
+				"cha",
+				"Surround: change surround"
+			],
+			[
+				"change",
+				"Surround: change surround"
+			],
+			[
+				":w",
+				":w - Save"
+			],
+			[
+				"boo",
+				"Bookmarks: Toggle"
+			],
+			[
+				"bookmar",
+				"Bookmarks: Toggle"
+			],
+			[
+				"side",
+				"View: Toggle Side Bar"
+			],
+			[
+				"django",
+				"Set Syntax: Python Django"
+			],
+			[
+				"togglesettings",
+				"Preferences: Toggle Settings – Current View"
+			],
+			[
+				"ctags",
+				"CTags: Show Symbols (all)"
+			],
+			[
+				"togglesett",
+				"Preferences: Toggle Settings – Current View"
+			],
+			[
+				"togglesetting",
+				"Preferences: Toggle Settings – Current View"
+			],
+			[
+				"gitbra",
+				"Git: New Branch"
+			],
+			[
+				"git merge",
+				"Git: Merge Branch"
+			],
+			[
+				"git",
+				"Git: Change Branch"
+			],
+			[
+				"newbranch",
+				"Git: New Branch"
+			],
+			[
+				"git pu",
+				"Git: Push"
+			],
+			[
+				"toggle",
+				"Preferences: Toggle Settings – Current View"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"openfile",
+				"View: Toggle Open Files in Side Bar"
+			],
+			[
+				"open",
+				"View: Toggle Open Files in Side Bar"
+			],
+			[
+				"git add",
+				"Git: Add Current File"
+			],
+			[
+				"gitstatus",
+				"Git: Status"
+			],
+			[
+				"git lo",
+				"Git: Log All"
+			],
+			[
+				"git blame",
+				"Git: Blame"
+			],
+			[
+				"markdow",
+				"Set Syntax: Markdown"
+			],
+			[
+				"ctags file",
+				"CTags: Show Symbols (file)"
+			],
+			[
+				"git fetch",
+				"Git: Fetch"
+			],
+			[
+				"gstatus",
+				"Git: Status"
+			],
+			[
+				":closa",
+				"File: Close All"
+			],
+			[
+				"closeall",
+				"File: Close All"
+			]
+		],
+		"width": 435.0
+	},
+	"console":
+	{
+		"height": 139.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/home/emil/.config/sublime-text-2/Packages/Default/Preferences.sublime-settings",
+		"/home/emil/Documents/Codemill/Dokufant/dokufant/.gitignore",
+		"/home/emil/Documents/Codemill/Dokufant/dokufant/dokufant/documentations/templates/documents/edit.html",
+		"/home/emil/Documents/Codemill/Dokufant/dokufant/dokufant/documentations/models.py",
+		"/home/emil/Documents/Codemill/Dokufant/dokufant/dokufant/documentations/templates/documents/sessions/ajaxEdit.html",
+		"/home/emil/Documents/Codemill/Dokufant/dokufant/dokufant/documentations/views/documents.py",
+		"/home/emil/Documents/Codemill/Dokufant/dokufant/static/styles/style.scss",
+		"/home/emil/Documents/Codemill/Dokufant/dokufant/static/scripts/autosave_settings.js",
+		"/home/emil/Documents/Codemill/Dokufant/dokufant/dokufant/documentations/templates/documents/settings.html",
+		"/home/emil/Documents/Codemill/Dokufant/dokufant/dokufant/documentations/templates/documents/_section.html",
+		"/home/emil/Documents/Codemill/Dokufant/dokufant/dokufant/documentations/templates/documents/sessions.html",
+		"/home/emil/.config/sublime-text-2/Packages/ShowFilenameStatus/ShowFilenameInStatus.py",
+		"/home/emil/.config/sublime-text-2/Packages/User/Preferences.sublime-settings",
+		"/home/emil/Documents/Codemill/Dokufant/dokufant/todo.mdown",
+		"/home/emil/.config/sublime-text-2/Packages/Package Control/Package Control.sublime-settings",
+		"/home/emil/.config/sublime-text-2/Packages/User/Default (Linux).sublime-keymap",
+		"/home/emil/Documents/Codemill/Dokufant/dokufant.sublime-project",
+		"/home/emil/Documents/dotfiles/zsh/zshrc",
+		"/home/emil/.config/sublime-text-2/Packages/Default/Default (Linux).sublime-keymap",
+		"/home/emil/Documents/Codemill/Dokufant/dokufant/dokufant/documentations/templates/documents/sessions/edit.html",
+		"/home/emil/Documents/Codemill/Dokufant/dokufant/dokufant/documentations/migrations/0034_add_field_DocumentSession_name.py",
+		"/home/emil/Documents/Codemill/Dokufant/dokufant/todo.otl",
+		"/home/emil/Documents/Codemill/Dokufant/todo.mdown",
+		"/home/emil/Documents/Codemill/Dokufant/dokufant/TODO",
+		"/home/emil/Documents/Codemill/Dokufant/dokufant/dokufant/documentations/utils/decorators.py",
+		"/home/emil/Documents/Codemill/Dokufant/dokufant/dokufant/documentations/tests/models.py",
+		"/home/emil/Documents/Codemill/Dokufant/dokufant/dokufant.log",
+		"/home/emil/.config/sublime-text-2/Packages/ToggleSettings/ToggleSettings.sublime-settings",
+		"/home/emil/.config/sublime-text-2/Packages/User/ToggleSettings.sublime-settings",
+		"/home/emil/Documents/Codemill/Dokufant/virtualenv/dokufant/lib/python2.7/site-packages/django/forms/widgets.py",
+		"/home/emil/Documents/Codemill/Dokufant/dokufant/dokufant/documentations/templates/settings.html",
+		"/home/emil/bin/django-launch-menu",
+		"/home/emil/Documents/Codemill/Dokufant/dokufant/dokufant/settings.py",
+		"/home/emil/Documents/Codemill/Dokufant/dokufant/dokufant/documentations/context_processors.py"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+			"*.*",
+			"selection",
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"\\\\n",
+			"splash.css",
+			"contact_form",
+			"label",
+			"radiobuttons",
+			"=",
+			"mail",
+			"\\<mail\\>",
+			"\\t",
+			"-",
+			"- Dokumentationer\n	- Nytt fält i formuläret för inställningar\n",
+			"-",
+			"datepicker",
+			"on.*submit\\>",
+			"\\<name\\>",
+			"prefer",
+			"preferences",
+			"helptext",
+			"form",
+			"created_",
+			"draw_active",
+			"form",
+			"modelform",
+			"', ",
+			"ctrl.*w",
+			"emieri.*\\<render",
+			"\\<render",
+			"Form\\>",
+			"4/8/2013",
+			"document_authorization",
+			"overlay",
+			"closed",
+			"ignore",
+			"ignored_"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": true,
+		"replace_history":
+		[
+			" = ",
+			"    ",
+			"+",
+			"- Dokumentationer\n	- Nytt fält i formuläret för inställningar\n",
+			"2013-04-08"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "dotfiles",
+					"settings":
+					{
+						"buffer_size": 1860,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								994,
+								994
+							]
+						],
+						"settings":
+						{
+							"function_name_status_row": 49,
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false,
+							"wrap_width": 0
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"settings":
+					{
+						"buffer_size": 26,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								19,
+								19
+							]
+						],
+						"settings":
+						{
+							"default_dir": "/home/emil/Documents/dotfiles/sublime2",
+							"function_name_status_row": 2,
+							"syntax": "Packages/JavaScript/JSON.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 2,
+					"file": "/home/emil/.gitconfig",
+					"settings":
+					{
+						"buffer_size": 456,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								456,
+								456
+							]
+						],
+						"settings":
+						{
+							"function_name_status_row": 23,
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "sublime2/setup.conf",
+					"settings":
+					{
+						"buffer_size": 122,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								26,
+								26
+							]
+						],
+						"settings":
+						{
+							"auto_name": "[symlinks]",
+							"function_name_status_row": 2,
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"wrap_width": 0
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 34.0
+	},
+	"input":
+	{
+		"height": 30.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			0.519276151089,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 84.0
+	},
+	"output.git":
+	{
+		"height": 84.0
+	},
+	"replace":
+	{
+		"height": 66.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"splash",
+				"static/styles/splash.css"
+			],
+			[
+				"style",
+				"static/styles/style.scss"
+			],
+			[
+				"tanks",
+				"dokufant/interestsignup/templates/thanks.html"
+			],
+			[
+				"urls",
+				"dokufant/urls.py"
+			],
+			[
+				"todo",
+				"todo.mdown"
+			],
+			[
+				"ajax",
+				"dokufant/documentations/templates/documents/sessions/ajaxEdit.html"
+			],
+			[
+				"edithtml",
+				"dokufant/documentations/templates/documents/edit.html"
+			],
+			[
+				"sessions",
+				"dokufant/documentations/templates/documents/sessions.html"
+			],
+			[
+				"edit",
+				"dokufant/documentations/templates/documents/edit.html"
+			],
+			[
+				"models",
+				"dokufant/documentations/models.py"
+			],
+			[
+				"aja",
+				"dokufant/documentations/templates/documents/sessions/ajaxEdit.html"
+			],
+			[
+				"documents",
+				"dokufant/documentations/views/documents.py"
+			],
+			[
+				"document",
+				"dokufant/documentations/views/documents.py"
+			],
+			[
+				"stylescss",
+				"static/styles/style.scss"
+			],
+			[
+				"docomentspy",
+				"dokufant/documentations/views/documents.py"
+			],
+			[
+				"",
+				"dokufant/documentations/templates/documents/sessions/ajaxEdit.html"
+			],
+			[
+				"modelp",
+				"dokufant/documentations/models.py"
+			],
+			[
+				"scss",
+				"static/styles/style.scss"
+			],
+			[
+				"section",
+				"dokufant/documentations/templates/documents/_section.html"
+			],
+			[
+				"session",
+				"dokufant/documentations/templates/documents/sessions.html"
+			],
+			[
+				"auto",
+				"static/scripts/autosave_settings.js"
+			],
+			[
+				"settingshtml",
+				"dokufant/documentations/templates/documents/settings.html"
+			],
+			[
+				"ajaxedit",
+				"dokufant/documentations/templates/documents/sessions/ajaxEdit.html"
+			],
+			[
+				"sty",
+				"static/styles/style.scss"
+			],
+			[
+				"_section",
+				"dokufant/documentations/templates/documents/_section.html"
+			],
+			[
+				"0034",
+				"dokufant/documentations/migrations/0034_add_field_DocumentSession_name.py"
+			],
+			[
+				"documentsessionhtml",
+				"dokufant/documentations/templates/documents/sessions.html"
+			],
+			[
+				"urls.py",
+				"dokufant/urls.py"
+			],
+			[
+				"model",
+				"dokufant/documentations/models.py"
+			],
+			[
+				"todomd",
+				"todo.mdown"
+			],
+			[
+				"utils.py",
+				"dokufant/documentations/utils/decorators.py"
+			],
+			[
+				"documents/tests",
+				"dokufant/documentations/tests/models.py"
+			],
+			[
+				"modelpy",
+				"dokufant/documentations/models.py"
+			],
+			[
+				"documentsedithtml",
+				"dokufant/documentations/templates/documents/edit.html"
+			],
+			[
+				"sessionhtml",
+				"dokufant/documentations/templates/documents/sessions.html"
+			],
+			[
+				"settingsht",
+				"documentations/templates/settings.html"
+			],
+			[
+				"documents/settings",
+				"documentations/templates/documents/settings.html"
+			],
+			[
+				"viewdocumen",
+				"documentations/views/documents.py"
+			],
+			[
+				"documentsettingshtml",
+				"documentations/templates/documents/settings.html"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"selected_items":
+		[
+			[
+				"",
+				"/home/emil/Documents/Codemill/Dokufant/dokufant.sublime-project"
+			]
+		],
+		"width": 380.0
+	},
+	"show_minimap": false,
+	"show_open_files": false,
+	"show_tabs": false,
+	"side_bar_visible": true,
+	"side_bar_width": 179.0,
+	"status_bar_visible": true
+}
