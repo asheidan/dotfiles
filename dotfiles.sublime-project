@@ -2,7 +2,8 @@
 	"folders":
 	[
 		{
-			"path": "/home/emil/Documents/dotfiles"
+			"name": "Dotfiles",
+			"path": "."
 		}
 	]
 }

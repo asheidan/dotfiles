@@ -1,0 +1,37 @@
+[
+	{ "keys": ["/"], "command": "show_panel", "args":
+		{
+			"panel": "incremental_find",
+			"select_text": false,
+			"reverse": false
+		},
+		"context": [{"key": "setting.command_mode"}]
+	},
+	{
+		"keys": ["ctrl+g"], "command": "find_next"
+	},
+	{
+		"keys": ["ctrl+w","c"],
+		"command": "close"
+	},
+	{
+		"keys": ["ctrl+w","1"],
+		"command": "set_layout",
+		"args":
+		{
+			"cols": [0.0, 1.0],
+			"rows": [0.0, 1.0],
+			"cells": [[0, 0, 1, 1]]
+		}
+	},
+	{
+		"keys": ["ctrl+w","2"],
+		"command": "set_layout",
+		"args":
+		{
+			"cols": [0.0, 0.5, 1.0],
+			"rows": [0.0, 1.0],
+			"cells": [[0, 0, 1, 1], [1, 0, 2, 1]]
+		}
+	}
+]

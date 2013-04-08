@@ -1,4 +1,5 @@
 {
+	"bold_folder_labels": true,
 	"color_scheme": "Packages/Filmgirl/Espresso Tutti.tmTheme",
 	"draw_indent_guides": true,
 	"file_exclude_patterns":
@@ -32,9 +33,12 @@
 		".hg",
 		"CVS"
 	],
-	"font_face": "ProfontWindows",
-	"font_options": "no_antialias",
-	"font_size": 9,
+	"font_face": "ProFontIsoLatin1",
+	"font_options":
+	[
+	],
+	"font_size": 9.0,
+	"highlight_line": true,
 	"ignored_packages":
 	[
 	],
