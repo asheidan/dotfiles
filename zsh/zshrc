@@ -55,6 +55,9 @@ bindkey -e
 #	echo "[${ref#refs/heads/}]"
 #}
 
+function safe-source () {
+	test -f "${1}" && source "${1}"
+}
 function virtualenv_info () {
 	[ ${VIRTUAL_ENV} ] && print " %{${fg_bold[grey]}%}env[%{${fg_no_bold[green]}%}"$(basename "${VIRTUAL_ENV}")"%{${fg_bold[grey]}%}]"
 }
@@ -101,8 +104,8 @@ _PROMPT="${_PROMPT} %{${fg_bold[grey]}%}[%{${fg_no_bold[default]}%}%n%{${fg_bold
 PROMPT="%{${fg_bold[grey]}%}[%{${fg_no_bold[default]}%} "
 #RPROMPT=" %{${fg_bold[grey]}%}]%{${fg_no_bold[default]}%}"
 
-#alias ls='ls -G -F'
-alias ls='ls --color=auto -F'
+# Determine gnu-ls
+ls -G >/dev/null 2>&1 && alias ls='ls -G -F' || alias ls='ls --color=auto -F'
 
 # Rails aliases
 #alias sgen="script/generate"
@@ -172,13 +175,13 @@ zle-line-init() {
 zle -N zle-keymap-select
 zle -N zle-line-init
 
-source "${HOME}/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+safe-source "${HOME}/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 ZSH_HIGHLIGHT_STYLES[globbing]='fg=yellow'
 #ZSH_HIGHLIGHT_STYLES[path]='fg=cyan'
 
-source "${HOME}/.zsh/zsh-history-substring-search/zsh-history-substring-search.zsh"
-source "${HOME}/.zsh/django-plugin/django.plugin.zsh"
-#source "${HOME}/.zsh/make-dir-complete/make-dir-complete.plugin.zsh"
+safe-source "${HOME}/.zsh/zsh-history-substring-search/zsh-history-substring-search.zsh"
+safe-source "${HOME}/.zsh/django-plugin/django.plugin.zsh"
+#safe-source "${HOME}/.zsh/make-dir-complete/make-dir-complete.plugin.zsh"
 
 typeset -A NAMED_DIRS
 NAMED_DIRS=(
