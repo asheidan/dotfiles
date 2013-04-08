@@ -1,4 +1,4 @@
-#!/usr/bin/zsh
+#!/usr/bin/env zsh
 
 if [[ -n "${TMUX}" ]] tmux rename-window "Django"
 print -Pn "\e]0;Django Launcher\a"
@@ -21,9 +21,9 @@ print "\t?"
 read -q answer
 print
 
+# Post setup
 case "${answer}" in
 	'r' )
-		
 		if [[ -n "${TMUX}" ]] tmux set-window-option monitor-activity on
 		;;
 esac
@@ -31,7 +31,12 @@ esac
 if [[ -n "${TMUX}" ]] tmux rename-window "${menu[$answer]}"
 print -Pn "\e]0;Django ${menu[$answer]}\a"
 
-manage=$(find -name manage.py -type f)
+manage=$(find . -name manage.py -type f)
 
+if [[ ${(w)#manage} != 1 ]]; then
+	print "Several manage-scripts was found:"
+	print "${manage}"
+	exit 1
+fi
 "${manage}" "${menu[$answer]}"
 
