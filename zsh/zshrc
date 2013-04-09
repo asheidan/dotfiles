@@ -105,7 +105,7 @@ PROMPT="%{${fg_bold[grey]}%}[%{${fg_no_bold[default]}%} "
 #RPROMPT=" %{${fg_bold[grey]}%}]%{${fg_no_bold[default]}%}"
 
 # Determine gnu-ls
-ls -G >/dev/null 2>&1 && alias ls='ls -G -F' || alias ls='ls --color=auto -F'
+ls --version >/dev/null 2>&1 && alias ls='ls --color=auto -F' || alias ls='ls -G -F'
 
 # Rails aliases
 #alias sgen="script/generate"
