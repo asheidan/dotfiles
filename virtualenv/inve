@@ -28,12 +28,16 @@ this script altogether.
 '''
 
 import os, sys
-
-from os.path import abspath, dirname, join as pathjoin
+from os.path import abspath, dirname, exists as pathexists, join as pathjoin
 
 shell_msg = ("Launching subshell in virtual environment. Type 'exit' or "
              "'Ctrl+D' to return.")
 
+ENVIRONMENT_KEYS = (
+    'DJANGO_SETTINGS_MODULE',
+    'PYTHONPATH',
+    'PATH',
+    )
 
 # VIRTUAL_ENV = '/Users/emil/Documents/Codemill/P4C/env-P4C'
 VIRTUAL_ENV = abspath(pathjoin(dirname(__file__),'..'))
@@ -56,6 +60,18 @@ shellcommands = {
         'rehash': '',
     }
 }
+
+def read_config(config_file):
+    global_config = {
+        "__file__": config_file
+    }
+    local_config = {}
+
+    execfile(config_file, global_config, local_config)
+
+    for key in ENVIRONMENT_KEYS:
+        if local_config.has_key(key):
+            os.environ[key] = local_config[key]
 
 def activate():
     '''Activates the venv by modifying the current environment.'''
@@ -106,6 +122,12 @@ def usage(argv0, msg=''):
 def main(argv):
     '''Process args and dispatch.'''
     argv0 = argv.pop(0)
+
+    config_file = pathjoin(VIRTUAL_ENV, "environment.py")
+    if pathexists(config_file):
+        read_config(config_file)
+    else:
+        print("   [\033[00;31m!\033[0m]   You might want to creat a environment.py")
 
     if argv and argv[0].startswith('-'):
         option = argv.pop(0)
