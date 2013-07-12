@@ -2,6 +2,7 @@ import Data.Ratio ((%))
 import System.IO
 import XMonad
 import XMonad.Actions.UpdatePointer
+import XMonad.Actions.WindowBringer
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.ManageDocks
@@ -70,6 +71,9 @@ myFocusedBorderColor = "#707280"
 
 home = "/home/emil/"
 
+myDMenuOpts =
+	[ "-l", "20", "-i", "-nf", "#5a5a5a", "-nb", "#19191d", "-sb", "#19191d", "-sf", "#9fc439", "-fn", "-*-fixed-medium-r-*-*-10-*-*-*-*-*-iso8859-1"]
+
 main = do
 	xmproc <- spawnPipe "/usr/bin/xmobar /home/emil/.xmobarrc"
 	trayproc <- spawnPipe "killall trayer; trayer --edge top --align right --monitor primary --SetDockType true --SetPartialStrut true --expand true --widthtype request --transparent true --tint 0x000000 --alpha 0 --distancefrom right --distance 380 --height 14"
@@ -101,6 +105,8 @@ main = do
 		]
 		`additionalKeysP`
 		[ ("<xK_Print>", spawn "scrot")
+		, ("M-i", gotoMenuArgs myDMenuOpts)
+		, ("M-S-i", bringMenuArgs myDMenuOpts)
 		, ("M-<Space>", spawn "dmenu_run")
 		, ("M-S-<Space>", spawn "gmrun")
 		, ("M-p", sendMessage NextLayout)
