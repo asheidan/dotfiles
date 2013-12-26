@@ -1,0 +1,116 @@
+# photon-qnx
+# theme for fluxbox
+# 2001 (c) skypher
+
+toolbar:                             flat solid
+toolbar.color:                       #19191d
+toolbar.alpha:                       120
+toolbar.height:                      14
+
+toolbar.*.color:                     #19191d
+
+toolbar.label:                       flat solid
+toolbar.label.textColor:             #238bcc
+
+toolbar.windowLabel:                 flat solid
+toolbar.windowLabel.textColor:       black
+
+toolbar.iconbar.unfocused:           flat solid
+toolbar.iconbar.unfocused.textColor: #dddddd
+
+toolbar.iconbar.focused:             flat solid
+toolbar.iconbar.focused.textColor:   #e08a1f
+
+toolbar.clock:                       flat solid
+toolbar.clock.justify:               right
+toolbar.clock.textColor:             #9fc439
+
+toolbar.button:                      solid flat
+toolbar.button.picColor:             #5a5a5a
+
+toolbar.button.pressed:              flat solid
+toolbar.button.pressed.color:        #5a5a5a
+
+menu.*.color:								 #19191d
+
+menu.title:                          flat solid
+menu.title.textColor:                #238bcc
+
+menu.frame:                          solid flat
+menu.frame.textColor:                #999999
+
+menu.hilite:                         flat solid
+menu.hilite.color:                   #9fc439
+menu.hilite.textColor:               #19191d
+
+menu.bullet:                         triangle
+menu.bullet.position:                right
+
+window.*.color:                      #19191d
+
+! win focus
+window.title.focus:                  flat solid
+
+window.label.focus:                  flat solid
+window.label.focus.textColor:        #e08a1f
+
+window.button.focus:                 flat solid
+window.button.focus.picColor:        #5a5a5a
+
+window.button.pressed:               flat solid
+window.button.pressed.color:         #5a5a5a
+window.button.pressed.picColor:      #999999
+
+window.handle.focus:                 flat solid
+
+window.grip.focus:                   flat solid
+
+window.frame.focusColor:             #5a5a5a
+
+
+! unfocused win
+window.title.unfocus:                flat solid
+
+
+window.label.unfocus:                flat solid
+window.label.unfocus.textColor:      white
+
+window.button.unfocus:               flat solid
+window.button.unfocus.picColor:      #19191d
+
+window.handle.unfocus:               flat solid
+
+window.grip.unfocus:                 flat solid
+
+window.frame.unfocusColor:           black
+
+! ----------- tab - explicit for fluxbox, the best wm out there[tm] (;
+window.tab.justify:                  left
+
+window.tab.label.unfocus:            flat solid
+window.tab.label.unfocus.textColor:  #5a5a5a
+
+window.tab.label.focus:              flat solid
+window.tab.label.focus.textColor:    white
+
+window.tab.borderWidth:              1
+window.tab.borderColor:              black
+! ----------- (fluxbox.sourceforge.net)
+
+! fonts
+*.font:                              profontwindows-9
+
+toolbar.justify:                     left
+window.justify:                      left
+menu.title.justify:                  left
+menu.frame.justify:                  left
+
+! borders n stuff
+borderColor:                         black
+borderWidth:                         1
+bevelWidth:                          0
+handleWidth:                         0
+frameWidth:                          1
+
+background: flat
+background.color: black
