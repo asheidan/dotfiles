@@ -11,12 +11,16 @@
 !*xterm*foreground: grey80
 !*xterm*background: #19191d
 
+*xterm*bellIsUrgent: true
+*xterm*bellsUrgent: true
+
 ! Molokai theme
 *xterm*background: #19191d
 *xterm*foreground: #dddddd
 *xterm*cursorColor: #dddddd
 ! Black
-*xterm*color0: #191911
+!*xterm*color0: #191911
+*xterm*color0: #19191d
 ! Red
 *xterm*color1: #bd0d74
 ! Green
@@ -45,3 +49,39 @@
 *rxvt*foreground: grey80
 *rxvt*background: black
 *rxvt*scrollBar: false
+
+! KeepassC
+*KeepassC*renderFont: true
+*KeepassC*faceName: ProFontWindows
+*KeepassC*faceSize: 9
+*KeepassC*boldMode:	false
+*KeepassC*allowBoldFonts: false
+*KeepassC*colorBDMode: true
+*KeepassC*background: #19191d
+*KeepassC*foreground: #dddddd
+*KeepassC*cursorColor: #dddddd
+*KeepassC*color0: #19191d
+*KeepassC*color1: #bd0d74
+*KeepassC*color2: #9fc439
+*KeepassC*color3: #e08a1f
+*KeepassC*color4: #238bcc
+*KeepassC*color5: #904ca8
+*KeepassC*color6: #3579a8
+*KeepassC*color7: #9999aa
+*KeepassC*color8: #5a5a5a
+*KeepassC*color9: #ff0090
+*KeepassC*color10: #80ff00
+*KeepassC*color11: #ffba68
+*KeepassC*color12: #5f5fee
+*KeepassC*color13: #bb88dd
+*KeepassC*color14: #4eb4fa
+*KeepassC*color15: #d0d0d0
+
+! {{{ Trying to enable better keybindings
+
+*VT100.translations: #override \
+			~Meta Shift Ctrl <Key>V:     insert-selection(CLIPBOARD) \n\
+			Meta Shift Ctrl <Key>V:      insert-selection(PRIMARY) \n\
+			Shift Ctrl <Key>V:           insert-selection(CLIPBOARD) \n\
+			Shift Ctrl <Key>C:           copy-selection(CLIPBOARD)
+! }}}
