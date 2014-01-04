@@ -127,7 +127,7 @@ def main(argv):
     if pathexists(config_file):
         read_config(config_file)
     else:
-        print("   [\033[00;31m!\033[0m]   You might want to creat a environment.py")
+        print("   [\033[00;31m!\033[0m]   You might want to create environment.py")
 
     if argv and argv[0].startswith('-'):
         option = argv.pop(0)
