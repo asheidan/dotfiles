@@ -1,8 +1,8 @@
 autoload -U colors; colors
 typeset -A ZSH_FISHPROMPT_STYLE
 ZSH_FISHPROMPT_STYLE=()
-ZSH_FISHPROMPT_STYLE[repo]='%U%B'
-ZSH_FISHPROMPT_STYLE[normal]="%b%u%{${fg_no_bold[magenta]}%}"
+ZSH_FISHPROMPT_STYLE[repo]='%U'
+ZSH_FISHPROMPT_STYLE[normal]="%u"
 ZSH_FISHPROMPT_STYLE[shortstr]="…"
 ZSH_FISHPROMPT_STYLE[shortlen]="4"
 

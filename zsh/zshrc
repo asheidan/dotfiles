@@ -27,11 +27,11 @@ zstyle ':vcs_info:*' check-for-changes true
 zstyle ':vcs_info:*' max-exports 3
 zstyle ':vcs_info:*' unstagedstr 'U'
 zstyle ':vcs_info:*' stagedstr 'S'
-zstyle ':vcs_info:*' actionformats " [%s:%b:%a]" '%R'
+zstyle ':vcs_info:*' actionformats " [%s:%b:%a]" '%R' '%S'
 if [[ "4.3.9" == "${ZSH_VERSION}" ]]; then
-	zstyle ':vcs_info:*' formats " %{${fg_bold[grey]}%}%1>>%s%>>[%{${fg_no_bold[green]}%}%b%{${fg_bold[grey]}%}]%{${fg_no_bold[default]}%}" '%R'
+	zstyle ':vcs_info:*' formats "%b" '%R'
 else
-	zstyle ':vcs_info:*' formats " %{${fg_bold[grey]}%}%1>>%s%>>[%{${fg_no_bold[green]}%}%b%{${fg_bold[grey]}%}%c%u]%{${fg_no_bold[default]}%}" '%R' '%S'
+	zstyle ':vcs_info:*' formats "%b%c%u" '%R' '%S'
 fi
 
 setopt COMPLETE_IN_WORD
@@ -57,112 +57,112 @@ function safe-source () {
 	test -f "${1}" && source "${1}"
 }
 function virtualenv_info () {
-	[ ${VIRTUAL_ENV} ] && print " %{${fg_bold[grey]}%}env[%{${fg_no_bold[green]}%}"$(basename "${VIRTUAL_ENV}")"%{${fg_bold[grey]}%}]"
+	if [ ${VIRTUAL_ENV} ]; then
+		venv=$(basename "${VIRTUAL_ENV}")
+		echo "${venv}"
+	fi
 }
 
 #bindkey -M menuselect '^o' accept-and-infer-next-history
 
-case $HOST in
-	[Ww]hite*)
-		prc="yellow"
-		;;
-	mate|submarine|tv|*.bigfist.net|black)
-		prc="magenta"
-		;;
-	salt|*.cs.umu.se)
-		prc="cyan"
-		;;
-	*.acc.umu.se)
-		prc="green"
-		;;
-	megaburken)
-		prc="blue"
-		;;
-	*)
-		prc="white"
-		;;
-esac
-
 source "${HOME}/.zsh/fish-path/fish-path.zsh"
 
-#RPROMPT="%{${fg_bold[grey]}%}%(1v.%2v@%3v:%4v.%~)%{${fg_no_bold[default]}%}"
+function wrap() {
+	local wc1=$3
+	local wc2=$4
+	echo "%F{${wc1}}[${2}%F{${wc2}}${1}%F{${wc1}}]"
+}
 
-#PROMPT="%{${fg_bold[grey]}%}[%{${fg_no_bold[green]}%}%m%{${fg_bold[grey]}%}] %{${fg_bold[white]}%}%n%{${fg_bold[grey]}%}:%{${fg_bold[green]}%}%c%{${fg_bold[grey]}%}%#%{${fg_no_bold[default]}%} "
-#PROMPT="%{${fg_bold[grey]}%}[%{${fg_no_bold[$prc]}%}${HOST[1]}%{${fg_bold[grey]}%}]%{${fg_bold[white]}%}${USER[1]}%{${fg_bold[grey]}%}:%{${fg_bold[$prc]}%}%c%{${fg_bold[grey]}%}%#%{${fg_no_bold[default]}%} "
+function render_prompt() {
+	local c1="$1"
+	local c2="$2"
+	local c3="$3"
+	local c4="$4"
+	local c5="$5"
 
-# Working directory
-_PROMPT="%{${fg_bold[grey]}%}[%{${fg_no_bold[magenta]}%}"'$(path_format "%~" ${vcs_info_msg_1_} ${vcs_info_msg_2_})'"%{${fg_bold[grey]}%}]"
-# vcs_info
-_PROMPT="${_PROMPT}"'${vcs_info_msg_0_}'
-# virtualenv_info
-_PROMPT="${_PROMPT}"'$(virtualenv_info)'
-# User@host
-_PROMPT="${_PROMPT} %{${fg_bold[grey]}%}[%{${fg_no_bold[default]}%}%n%{${fg_bold[grey]}%}@%{${fg_no_bold[default]}%}%m%{${fg_bold[grey]}%}]%{${fg_no_bold[default]}%}"
+	# user@host
+	local right="%F{${c2}}[%F{${c3}}%n%F{${c2}}@%F{${c4}}%m%F{${c2}}]%f%k"
+	# sublevel
+	right="%(2L.$(wrap %L 'L|' ${c2} ${c3}).)%v${right}"
+	# bg jobs
+	right="%(1j.$(wrap %j 'J|' ${c2} ${c3}).)%v${right}"
+	local right_len="${#${(S%%)${(e)right}//\%(([FK]\{[0123456789]*\})|[fkuU])}}"
 
-PROMPT="%{${fg_bold[grey]}%}[%{${fg_no_bold[default]}%} "
+	# workdir
+	PROMPT="%K{${c1}}%F{${2}}$(wrap $(path_format %~ ${vcs_info_msg_1_} ${vcs_info_msg_2_}) '' ${c2} ${c5})"
+	local prompt_len="${#${(S%%)${(e)PROMPT}//\%(([FK]\{[0123456789]*\})|[fkuU])}}"
+
+	# virtual environment
+	local venv_info=$(virtualenv_info)
+	if [[ "" != "${venv_info}" ]]; then
+		venv_prompt=" "$(wrap ${venv_info} 'e|' ${c2} ${c3})
+		venv_prompt_len="${#${(S%%)${(e)venv_prompt}//\%(([FK]\{[0123456789]*\})|[fkuU])}}"
+		if [[ $((${prompt_len} + ${right_len} + ${venv_prompt_len})) -lt ${COLUMNS} ]]; then
+			PROMPT="${PROMPT}${venv_prompt}"
+			prompt_len="${#${(S%%)${(e)PROMPT}//\%(([FK]\{[0123456789]*\})|[fkuU])}}"
+		fi
+	fi
+	
+	# vcs-status
+	if [[ "" != "${vcs_info_msg_0_}" ]]; then
+		vcs_prompt=" "$(wrap $(path_format ${vcs_info_msg_0_}) 'g|' ${c2} ${c3})
+		vcs_prompt_len="${#${(S%%)${(e)vcs_prompt}//\%(([FK]\{[0123456789]*\})|[fkuU])}}"
+		if [[ $((${prompt_len} + ${right_len} + ${vcs_prompt_len})) -lt ${COLUMNS} ]]; then
+			PROMPT="${PROMPT}${vcs_prompt}"
+			prompt_len="${#${(S%%)${(e)PROMPT}//\%(([FK]\{[0123456789]*\})|[fkuU])}}"
+		fi
+	fi
+
+
+	PROMPT="${PROMPT}${(l.($COLUMNS - $prompt_len - $right_len - 1).. .)}${right}
+"
+}
+
+#PROMPT="${_PROMPT}%k%f
+#"
 #RPROMPT=" %{${fg_bold[grey]}%}]%{${fg_no_bold[default]}%}"
 
 # Determine gnu-ls
 ls --version >/dev/null 2>&1 && alias ls='ls --color=auto -F' || alias ls='ls -G -F'
 
-# Rails aliases
-#alias sgen="script/generate"
-#alias sserv="script/server"
-#alias scon="script/console"
-#alias splug="script/plugin"
-
-# Projects
-p() {
-	case "${1}" in
-		status )
-			cwd=`pwd`
-			cd ${PROJDIR}
-			for dir in `ls -F --sort time | grep "/$" | sed 's/.$//'`; do
-				cd "${dir}"
-				echo -n $dir ":: "
-				git status | tail -n 1 | sed 's/(.*//'
-				cd ..
-			done
-			cd "${cwd}"
-			;;
-		* )
-			cd "${PROJDIR}${1}"*/
-			;;
-	esac
-}
+export EDITOR="vim"
 
 precmd () {
 	#local get_dir branch
 	vcs_info
-	print -rP "${_PROMPT}"
-	print -Pn "\e]0;%~\a"
-	RPROMPT="${INSPROMPT}"
+	#print -rP "${_PROMPT}"
+	print -Pn "\e]0;%~ %n@%m\a"
+	#PROMPT="${INSPROMPT}"
+	render_prompt 64 70 76 82 255
 }
 
 # Screen name
 preexec () {
 	if [[ "$TERM" == "screen" ]]; then
-	local CMD=${1[(wr)^(*=*|sudo|-*)]}
-	echo -ne "\ek$CMD\e\\"
+		local CMD=${1[(wr)^(*=*|sudo|-*)]}
+		echo -ne "\ek$CMD\e\\"
 	fi
-
-	# tput cuu1
-	# print -P -- "%{${fg_bold[grey]}%}[${HOST[1]}]${USER[1]}:%c%#%{${fg_no_bold[default]}%} "
 }
 
 set -o vi
 bindkey -M vicmd '?' history-incremental-search-backward
 bindkey -M vicmd '/' history-incremental-search-forward
+bindkey -a u undo
+bindkey -a '^R' redo
+bindkey '^?' backward-delete-char
+bindkey '^H' backward-delete-char
+
+#CMDPROMPT='%K{25}%F{31}[%f%F{37}%f%F{255}$(path_format %~ ${vcs_info_msg_1_} ${vcs_info_msg_2_})%f%F{31}]%f%k '
+#INSPROMPT='%K{64}%F{70}[%f%F{76}%f%F{255}$(path_format %~ ${vcs_info_msg_1_} ${vcs_info_msg_2_})%f%F{70}]%f%k '
+
 # Indication for insert mode
-local CMDPROMPT INSPROMPT
-CMDPROMPT="%{${fg_bold[red]}%}[CMD]%{${fg_no_bold[default]}%}"
-#INSPROMPT="%{${bg[blue]}${fg_bold[white]}%}INS%{${bg[default]}${fg_bold[grey]}%}[%{${fg_no_bold[default]}%} "
-INSPROMPT=""
 zle-keymap-select() {
 	if [[ ${KEYMAP} = vicmd ]] ; then
-		RPROMPT="${CMDPROMPT}"
+		#PROMPT="${CMDPROMPT}"
+		render_prompt 25 31 37 43 255
 	else
-		RPROMPT="${INSPROMPT}"
+		#PROMPT="${INSPROMPT}"
+		render_prompt 64 70 76 82 255
 	fi
 	() { return $__prompt_status }
 	zle reset-prompt
@@ -181,29 +181,4 @@ safe-source "${HOME}/.zsh/zsh-history-substring-search/zsh-history-substring-sea
 safe-source "${HOME}/.zsh/django-plugin/django.plugin.zsh"
 #safe-source "${HOME}/.zsh/make-dir-complete/make-dir-complete.plugin.zsh"
 
-typeset -A NAMED_DIRS
-NAMED_DIRS=(
-	note	~/Dropbox/Notes
-	drop	~/Dropbox
-	mill	~/Documents/Codemill
-	dot	~/Documents/Projects/dotfiles
-	proj	~/Documents/Projects
-	edu	~/Documents/Education
-)
-for key in ${(k)NAMED_DIRS}
-do
-	if [[ -d "${NAMED_DIRS[$key]}" ]]; then
-		export $key="${NAMED_DIRS[$key]}"
-		: ~$key
-	else
-		unset "NAMED_DIRS[$key]"
-	fi
-done
-#: ${(k)NAMED_DIRS}
-
-function namedirs () {
-	for key in ${(k)NAMED_DIRS}
-	do
-		printf "%-10s %s\n" "${key}" "${NAMED_DIRS[$key]}"
-	done
-}
+cdpath=(~ ~/Documents/Codemill ~/Documents/Projects)
