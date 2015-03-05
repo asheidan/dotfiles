@@ -17,5 +17,8 @@
 	stb = status -s -b
 	unmerged = branch --no-merged
 	sha = rev-parse --verify HEAD
+	search = "!f() { git grep \"$@\" $(git rev-list --all); }; f"
+	last-common = !zsh -c 'diff --old-line-format='' --new-line-format='' <(git rev-list --first-parent "${1:-development}") <(git rev-list --first-parent "${2:-HEAD}") | head -1' -
+	branch-log = !zsh -c 'git log $(git last-common ${*})..${2:-HEAD}' -
 [diff]
 	tool = vimdiff
