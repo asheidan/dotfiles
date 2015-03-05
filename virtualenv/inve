@@ -27,7 +27,8 @@ this script altogether.
 
 '''
 
-import os, sys
+import os
+import sys
 from os.path import abspath, dirname, exists as pathexists, join as pathjoin
 
 shell_msg = ("Launching subshell in virtual environment. Type 'exit' or "
@@ -40,7 +41,7 @@ ENVIRONMENT_KEYS = (
     )
 
 # VIRTUAL_ENV = '/Users/emil/Documents/Codemill/P4C/env-P4C'
-VIRTUAL_ENV = abspath(pathjoin(dirname(__file__),'..'))
+VIRTUAL_ENV = abspath(pathjoin(dirname(__file__), '..'))
 BIN_NAME = 'bin'
 
 shellcommands = {
@@ -61,29 +62,35 @@ shellcommands = {
     }
 }
 
+
 def read_config(config_file):
     global_config = {
         "__file__": config_file
     }
+    for key in ENVIRONMENT_KEYS:
+        if key in os.environ:
+            print("%s=%s" % (key, os.environ[key].split(os.pathsep)))
     local_config = {}
 
     execfile(config_file, global_config, local_config)
 
     for key in ENVIRONMENT_KEYS:
-        if local_config.has_key(key):
+        if key in local_config:
             os.environ[key] = local_config[key]
+
 
 def activate():
     '''Activates the venv by modifying the current environment.'''
     os.environ['VIRTUAL_ENV'] = VIRTUAL_ENV
     os.environ['PATH'] = os.pathsep.join([
-            os.path.join(os.environ['VIRTUAL_ENV'], BIN_NAME),
-            os.environ['PATH'],
-        ])
+        os.path.join(os.environ['VIRTUAL_ENV'], BIN_NAME),
+        os.environ['PATH'],
+    ])
     try:
         del os.environ['PYTHONHOME']
     except KeyError:
         pass
+
 
 def print_deactivate_commands(shell):
     for k in ['PATH', 'PYTHONHOME', 'PS1']:
@@ -93,11 +100,13 @@ def print_deactivate_commands(shell):
             print(shellcommands[shell]['del'] % dict(
                 key='_OLD_VIRTUAL_%s' % k))
 
+
 def print_backup_commands(shell):
     for k in ['PATH', 'PYTHONHOME', 'PS1']:
         if k in os.environ and not '_OLD_VIRTUAL_%s' % k in os.environ:
             print(shellcommands[shell]['set'] % dict(
                 key='_OLD_VIRTUAL_%s' % k, value=os.environ[k]))
+
 
 def print_activate_commands(shell):
     for k in ['PATH', 'PS1']:
@@ -107,6 +116,7 @@ def print_activate_commands(shell):
     print(shellcommands[shell]['del'] % dict(key='PYTHONHOME'))
     print(shellcommands[shell]['rehash'])
 
+
 def invoke(args=[]):
     '''Launch a subcommand given by 'args', or the user's preferred shell.'''
     if args:
@@ -115,9 +125,11 @@ def invoke(args=[]):
         sys.stderr.write('%s\n' % shell_msg)
         os.execvp(os.environ['SHELL'], [os.environ['SHELL']])
 
+
 def usage(argv0, msg=''):
     '''Return a usage string with an optional message'''
     return msg + '\n' if msg else '' + __doc__.strip().replace('$0', argv0)
+
 
 def main(argv):
     '''Process args and dispatch.'''
@@ -143,7 +155,7 @@ def main(argv):
             shell = 'fish'
         else:
             return usage(argv0, "Unknown option.")
-        
+
         if argv0.endswith('deactivate'):
             print_deactivate_commands(shell)
         else:
@@ -155,5 +167,4 @@ def main(argv):
         return invoke(argv)
 
 if __name__ == '__main__':
-   raise SystemExit(main(sys.argv))
-
+    raise SystemExit(main(sys.argv))
