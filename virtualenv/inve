@@ -38,6 +38,7 @@ ENVIRONMENT_KEYS = (
     'DJANGO_SETTINGS_MODULE',
     'PYTHONPATH',
     'PATH',
+    'LC_ALL',
     )
 
 # VIRTUAL_ENV = '/Users/emil/Documents/Codemill/P4C/env-P4C'
