@@ -7,3 +7,6 @@
 [submodule "zsh/zsh/zsh-syntax-highlighting"]
 	path = zsh/zsh/zsh-syntax-highlighting
 	url = https://github.com/zsh-users/zsh-syntax-highlighting.git
+[submodule "emacs"]
+	path = emacs
+	url = ssh://git@github.com:asheidan/Emacsfiles.git
