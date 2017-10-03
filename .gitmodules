@@ -10,3 +10,6 @@
 [submodule "emacs"]
 	path = emacs
 	url = git@github.com:asheidan/Emacsfiles.git
+[submodule "zsh/zsh/zsh-autosuggestions"]
+	path = zsh/zsh/zsh-autosuggestions
+	url = git@github.com:zsh-users/zsh-autosuggestions.git
