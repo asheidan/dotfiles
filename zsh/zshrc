@@ -178,12 +178,13 @@ autoload edit-command-line
 zle -N edit-command-line
 bindkey -M vicmd v edit-command-line
 
-safe-source "${HOME}/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-ZSH_HIGHLIGHT_STYLES[globbing]='fg=yellow'
-#ZSH_HIGHLIGHT_STYLES[path]='fg=cyan'
 
 safe-source "${HOME}/.zsh/zsh-history-substring-search/zsh-history-substring-search.zsh"
 safe-source "${HOME}/.zsh/django-plugin/django.plugin.zsh"
 #safe-source "${HOME}/.zsh/make-dir-complete/make-dir-complete.plugin.zsh"
 
 cdpath=(~ ~/Documents/Codemill ~/Documents/Projects)
+
+safe-source "${HOME}/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+#ZSH_HIGHLIGHT_STYLES[globbing]='fg=yellow'
+#ZSH_HIGHLIGHT_STYLES[path]='fg=cyan'
