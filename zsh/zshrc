@@ -41,6 +41,7 @@ setopt EXTENDED_GLOB
 setopt NO_HUP
 #setopt MULTIBYTE
 setopt PROMPT_SUBST
+setopt SHARE_HISTORY
 
 HISTFILE=~/.histfile
 HISTSIZE=1000
