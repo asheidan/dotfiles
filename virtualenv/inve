@@ -68,14 +68,17 @@ def read_config(config_file):
     global_config = {
         "__file__": config_file
     }
-    for key in ENVIRONMENT_KEYS:
-        if key in os.environ:
-            print("%s=%s" % (key, os.environ[key].split(os.pathsep)))
+    #for key in ENVIRONMENT_KEYS:
+    #    if key in os.environ:
+    #        print("%s=%s" % (key, os.environ[key].split(os.pathsep)))
     local_config = {}
 
     execfile(config_file, global_config, local_config)
 
     for key in ENVIRONMENT_KEYS:
+        print("%s: %s | %s" % (key,
+                               os.environ.get(key),
+                               local_config.get(key)))
         if key in local_config:
             os.environ[key] = local_config[key]
 
