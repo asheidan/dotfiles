@@ -93,7 +93,7 @@ function render_prompt() {
 	local right_len="${#${(S%%)${(e)right}//\%(([FK]\{[0123456789]*\})|[fkuU])}}"
 
 	# workdir
-	PROMPT="%K{${c1}}%F{${2}}$(wrap $(path_format %~ ${vcs_info_msg_1_} ${vcs_info_msg_2_}) '' ${c2} ${c5})"
+	PROMPT="%K{${c1}}%F{${2}}$(wrap $(path_format "%~" ${vcs_info_msg_1_} ${vcs_info_msg_2_}) '' ${c2} ${c5})"
 	local prompt_len="${#${(S%%)${(e)PROMPT}//\%(([FK]\{[0123456789]*\})|[fkuU])}}"
 
 	# virtual environment
