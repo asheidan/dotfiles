@@ -136,6 +136,15 @@ precmd () {
 	vcs_info
 	#print -rP "${_PROMPT}"
 	print -Pn "\e]0;%~ %n@%m\a"
+
+	if [ $timer ]; then
+		timer_show=$(($SECONDS - $timer))
+		if [ $timer_show -gt 5 ]; then
+			print "\e[1;30mTook ${timer_show} seconds\e[0m"
+		fi
+		unset timer
+	fi
+
 	#PROMPT="${INSPROMPT}"
 	render_prompt 64 70 76 82 255
 }
