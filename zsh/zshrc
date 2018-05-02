@@ -93,7 +93,7 @@ function render_prompt() {
 	local right_len="${#${(S%%)${(e)right}//\%(([FK]\{[0123456789]*\})|[fkuU])}}"
 
 	# workdir
-	PROMPT="%K{${c1}}%F{${2}}$(wrap $(path_format %~ ${vcs_info_msg_1_} ${vcs_info_msg_2_}) '' ${c2} ${c5})"
+	PROMPT="%K{${c1}}%F{${2}}$(wrap $(path_format "%~" ${vcs_info_msg_1_} ${vcs_info_msg_2_}) '' ${c2} ${c5})"
 	local prompt_len="${#${(S%%)${(e)PROMPT}//\%(([FK]\{[0123456789]*\})|[fkuU])}}"
 
 	# virtual environment
@@ -136,6 +136,15 @@ precmd () {
 	vcs_info
 	#print -rP "${_PROMPT}"
 	print -Pn "\e]0;%~ %n@%m\a"
+
+	if [ $timer ]; then
+		timer_show=$(($SECONDS - $timer))
+		if [ $timer_show -gt 5 ]; then
+			print "\e[1;30mTook ${timer_show} seconds\e[0m"
+		fi
+		unset timer
+	fi
+
 	#PROMPT="${INSPROMPT}"
 	render_prompt 64 70 76 82 255
 }
