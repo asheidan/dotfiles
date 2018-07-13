@@ -11,9 +11,13 @@ fi
 
 alternative_count=$(echo "${inve}" | wc -l | tr -d "[:space:]")
 if [[ $alternative_count -gt 1 ]]; then
-	echo "Found several scripts:"
-	echo "${inve}" | sed "s/^/\t/"
-	exit -2
+	if fzf --help &> /dev/null; then
+		inve=$(fzf --height=$(( 2 + ${alternative_count} )) --header="Choose virtual environment" <<< "${inve}") || exit -1
+	else
+		echo "Found several scripts:"
+		echo "${inve}" | sed "s/^/\t/"
+		exit -2
+	fi
 fi
 
 echo "Found inve at ${inve}"
