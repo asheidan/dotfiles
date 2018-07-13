@@ -2,18 +2,19 @@
 
 echo "Searching for inve-script..."
 
-inve=$(find * -wholename '*/bin/inve')
+inve=$(find * .virtualenv -wholename '*/bin/inve' 2> /dev/null)
 
 if [[ -z "${inve}" ]]; then
 	echo "Couldn't find an inve-script"
 	exit -1
 fi
 
-if [[ $(echo "${inve}" | wc -l) > 1 ]]; then
+alternative_count=$(echo "${inve}" | wc -l | tr -d "[:space:]")
+if [[ $alternative_count -gt 1 ]]; then
 	echo "Found several scripts:"
 	echo "${inve}" | sed "s/^/\t/"
 	exit -2
 fi
 
 echo "Found inve at ${inve}"
-"${inve}" $@
+exec "${inve}" $@
