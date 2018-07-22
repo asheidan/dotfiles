@@ -42,9 +42,12 @@ setopt NO_HUP
 #setopt MULTIBYTE
 setopt PROMPT_SUBST
 
-setopt SHARE_HISTORY
+
+setopt HIST_IGNORE_SPACE
+setopt HIST_IGNORE_DUPS
 setopt HIST_EXPIRE_DUPS_FIRST
 setopt HIST_FIND_NO_DUPS
+setopt SHARE_HISTORY
 
 HISTFILE=~/.histfile
 HISTSIZE=10000
@@ -59,12 +62,6 @@ bindkey -e
 
 function safe-source () {
 	test -f "${1}" && source "${1}"
-}
-function virtualenv_info () {
-	if [ ${VIRTUAL_ENV} ]; then
-		venv=$(basename "${VIRTUAL_ENV}")
-		echo "${venv}"
-	fi
 }
 
 #bindkey -M menuselect '^o' accept-and-infer-next-history
@@ -147,3 +144,44 @@ cdpath=(~ ~/Documents/Codemill ~/Documents/Projects)
 safe-source "${HOME}/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 #ZSH_HIGHLIGHT_STYLES[globbing]='fg=yellow'
 #ZSH_HIGHLIGHT_STYLES[path]='fg=cyan'
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+export FZF_DEFAULT_OPTS="--inline-info --color='light,marker:5,pointer:4,prompt:4,hl:5,hl+:5,info:2,spinner:3'"
+
+ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(reset-prompt)
+function _is_in_git_repo() {
+  git rev-parse HEAD > /dev/null 2>&1
+}
+function _fzf () {
+	fzf --height 50% "$@"
+}
+
+function join-lines() {
+  local item
+  while read item; do
+    echo -n "${(q)item} "
+  done
+}
+
+function _gt() {
+  _is_in_git_repo || return
+  git tag --sort -version:refname |
+  _fzf --multi --preview-window right:70% \
+    --preview 'git show --color=always {} | head -'$LINES
+}
+function _fzf-gt-widget() { local result=$(_gt | join-lines); zle reset-prompt; LBUFFER+=$result }
+zle -N _fzf-gt-widget
+ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(_fzf-gt-widget)
+bindkey '^X^G^T' _fzf-gt-widget
+
+function _gb() {
+  _is_in_git_repo || return
+  git branch -a --color=always | grep -v '/HEAD\s' | sort |
+  _fzf --ansi --multi --tac --preview-window right:70% \
+    --preview 'git log --oneline --graph --date=short --pretty="format:%C(auto)%cd %h%d %s" $(sed s/^..// <<< {} | cut -d" " -f1) | head -'$LINES |
+  sed 's/^..//' | cut -d' ' -f1 |
+  sed 's#^remotes/##'
+}
+function _fzf-gb-widget() { local result=$(_gb | join-lines); zle reset-prompt; LBUFFER+=$result }
+zle -N _fzf-gb-widget
+ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(_fzf-gb-widget)
+bindkey '^X^G^B' _fzf-gb-widget
