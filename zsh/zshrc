@@ -47,8 +47,8 @@ setopt HIST_EXPIRE_DUPS_FIRST
 setopt HIST_FIND_NO_DUPS
 
 HISTFILE=~/.histfile
-HISTSIZE=2000
-SAVEHIST=1000
+HISTSIZE=10000
+SAVEHIST=5000
 bindkey -e
 
 # Git-prompt
@@ -69,62 +69,7 @@ function virtualenv_info () {
 
 #bindkey -M menuselect '^o' accept-and-infer-next-history
 
-source "${HOME}/.zsh/fish-path/fish-path.zsh"
-
-function wrap() {
-	local wc1=$3
-	local wc2=$4
-	echo "%F{${wc1}}[${2}%F{${wc2}}${1}%F{${wc1}}]"
-}
-
-function render_prompt() {
-	local c1="$1"
-	local c2="$2"
-	local c3="$3"
-	local c4="$4"
-	local c5="$5"
-
-	# user@host
-	local right="%F{${c2}}[%F{${c3}}%n%F{${c2}}@%F{${c4}}%m%F{${c2}}]%f%k"
-	# sublevel
-	right="%(2L.$(wrap %L 'L|' ${c2} ${c3}).)%v${right}"
-	# bg jobs
-	right="%(1j.$(wrap %j 'J|' ${c2} ${c3}).)%v${right}"
-	local right_len="${#${(S%%)${(e)right}//\%(([FK]\{[0123456789]*\})|[fkuU])}}"
-
-	# workdir
-	PROMPT="%K{${c1}}%F{${2}}$(wrap $(path_format "%~" ${vcs_info_msg_1_} ${vcs_info_msg_2_}) '' ${c2} ${c5})"
-	local prompt_len="${#${(S%%)${(e)PROMPT}//\%(([FK]\{[0123456789]*\})|[fkuU])}}"
-
-	# virtual environment
-	local venv_info=$(virtualenv_info)
-	if [[ "" != "${venv_info}" ]]; then
-		venv_prompt=" "$(wrap ${venv_info} 'e|' ${c2} ${c3})
-		venv_prompt_len="${#${(S%%)${(e)venv_prompt}//\%(([FK]\{[0123456789]*\})|[fkuU])}}"
-		if [[ $((${prompt_len} + ${right_len} + ${venv_prompt_len})) -lt ${COLUMNS} ]]; then
-			PROMPT="${PROMPT}${venv_prompt}"
-			prompt_len="${#${(S%%)${(e)PROMPT}//\%(([FK]\{[0123456789]*\})|[fkuU])}}"
-		fi
-	fi
-	
-	# vcs-status
-	if [[ "" != "${vcs_info_msg_0_}" ]]; then
-		vcs_prompt=" "$(wrap $(path_format ${vcs_info_msg_0_}) 'g|' ${c2} ${c3})
-		vcs_prompt_len="${#${(S%%)${(e)vcs_prompt}//\%(([FK]\{[0123456789]*\})|[fkuU])}}"
-		if [[ $((${prompt_len} + ${right_len} + ${vcs_prompt_len})) -lt ${COLUMNS} ]]; then
-			PROMPT="${PROMPT}${vcs_prompt}"
-			prompt_len="${#${(S%%)${(e)PROMPT}//\%(([FK]\{[0123456789]*\})|[fkuU])}}"
-		fi
-	fi
-
-
-	PROMPT="${PROMPT}${(l.($COLUMNS - $prompt_len - $right_len - 1).. .)}${right}
-"
-}
-
-#PROMPT="${_PROMPT}%k%f
-#"
-#RPROMPT=" %{${fg_bold[grey]}%}]%{${fg_no_bold[default]}%}"
+#source "${HOME}/.zsh/fish-path/fish-path.zsh"
 
 # Determine gnu-ls
 ls --version >/dev/null 2>&1 && alias ls='ls --color=auto -F' || alias ls='ls -G -F'
@@ -132,21 +77,18 @@ ls --version >/dev/null 2>&1 && alias ls='ls --color=auto -F' || alias ls='ls -G
 export EDITOR="vim"
 
 precmd () {
-	#local get_dir branch
-	vcs_info
-	#print -rP "${_PROMPT}"
 	print -Pn "\e]0;%~ %n@%m\a"
 
 	if [ $timer ]; then
 		timer_show=$(($SECONDS - $timer))
-		if [ $timer_show -gt 5 ]; then
+		if [ $timer_show -gt 10 ]; then
 			print "\e[1;30mTook ${timer_show} seconds\e[0m"
 		fi
 		unset timer
 	fi
 
-	#PROMPT="${INSPROMPT}"
-	render_prompt 64 70 76 82 255
+	print "\e[1;37m________________________________________________________________________________\e[0m"
+	prompt-info
 }
 
 # Screen name
@@ -155,6 +97,7 @@ preexec () {
 		local CMD=${1[(wr)^(*=*|sudo|-*)]}
 		echo -ne "\ek$CMD\e\\"
 	fi
+	timer=${timer:-$SECONDS}
 }
 
 set -o vi
@@ -165,19 +108,19 @@ bindkey -a '^R' redo
 bindkey '^?' backward-delete-char
 bindkey '^H' backward-delete-char
 
-#CMDPROMPT='%K{25}%F{31}[%f%F{37}%f%F{255}$(path_format %~ ${vcs_info_msg_1_} ${vcs_info_msg_2_})%f%F{31}]%f%k '
-#INSPROMPT='%K{64}%F{70}[%f%F{76}%f%F{255}$(path_format %~ ${vcs_info_msg_1_} ${vcs_info_msg_2_})%f%F{70}]%f%k '
+PROMPT=""
 
 # Indication for insert mode
-zle-keymap-select() {
+select_prompt() {
 	if [[ ${KEYMAP} = vicmd ]] ; then
-		#PROMPT="${CMDPROMPT}"
-		render_prompt 25 31 37 43 255
+		PROMPT="${CMDPROMPT}"
 	else
-		#PROMPT="${INSPROMPT}"
-		render_prompt 64 70 76 82 255
+		PROMPT="${INSPROMPT}"
 	fi
+}
+zle-keymap-select() {
 	() { return $__prompt_status }
+	# select_prompt
 	zle reset-prompt
 }
 zle-line-init() {
