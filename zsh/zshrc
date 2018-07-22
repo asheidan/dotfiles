@@ -21,18 +21,18 @@ zstyle ':completion:*' special-dirs '..'
 
 autoload -Uz compinit; compinit
 
-autoload -Uz vcs_info
-zstyle ':vcs_info:*' enable git svn
-zstyle ':vcs_info:*' check-for-changes true
-zstyle ':vcs_info:*' max-exports 3
-zstyle ':vcs_info:*' unstagedstr 'U'
-zstyle ':vcs_info:*' stagedstr 'S'
-zstyle ':vcs_info:*' actionformats " [%s:%b:%a]" '%R' '%S'
-if [[ "4.3.9" == "${ZSH_VERSION}" ]]; then
-	zstyle ':vcs_info:*' formats "%b" '%R'
-else
-	zstyle ':vcs_info:*' formats "%b%c%u" '%R' '%S'
-fi
+# autoload -Uz vcs_info
+# zstyle ':vcs_info:*' enable git svn
+# zstyle ':vcs_info:*' check-for-changes true
+# zstyle ':vcs_info:*' max-exports 3
+# zstyle ':vcs_info:*' unstagedstr 'U'
+# zstyle ':vcs_info:*' stagedstr 'S'
+# zstyle ':vcs_info:*' actionformats " [%s:%b:%a]" '%R' '%S'
+# if [[ "4.3.9" == "${ZSH_VERSION}" ]]; then
+# 	zstyle ':vcs_info:*' formats "%b" '%R'
+# else
+# 	zstyle ':vcs_info:*' formats "%b%c%u" '%R' '%S'
+# fi
 
 setopt COMPLETE_IN_WORD
 setopt INTERACTIVE_COMMENTS
@@ -40,7 +40,6 @@ setopt LIST_PACKED
 setopt EXTENDED_GLOB
 setopt NO_HUP
 #setopt MULTIBYTE
-setopt PROMPT_SUBST
 
 
 setopt HIST_IGNORE_SPACE
@@ -70,6 +69,7 @@ function safe-source () {
 
 # Determine gnu-ls
 ls --version >/dev/null 2>&1 && alias ls='ls --color=auto -F' || alias ls='ls -G -F'
+which tree >/dev/null 2>&1 && alias tree='tree -C'
 
 export EDITOR="vim"
 
@@ -131,7 +131,6 @@ zle -N edit-command-line
 bindkey -M vicmd v edit-command-line
 
 
-safe-source "${HOME}/.zsh/zsh-history-substring-search/zsh-history-substring-search.zsh"
 
 safe-source "${HOME}/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh"
 ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=64
@@ -144,6 +143,12 @@ cdpath=(~ ~/Documents/Codemill ~/Documents/Projects)
 safe-source "${HOME}/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 #ZSH_HIGHLIGHT_STYLES[globbing]='fg=yellow'
 #ZSH_HIGHLIGHT_STYLES[path]='fg=cyan'
+
+# Substring search needs to be after syntax highlight
+safe-source "${HOME}/.zsh/zsh-history-substring-search/zsh-history-substring-search.zsh"
+bindkey -M vicmd 'k' history-substring-search-up
+bindkey -M vicmd 'j' history-substring-search-down
+
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 export FZF_DEFAULT_OPTS="--inline-info --color='light,marker:5,pointer:4,prompt:4,hl:5,hl+:5,info:2,spinner:3'"
 
