@@ -131,6 +131,8 @@ zle -N edit-command-line
 bindkey -M vicmd v edit-command-line
 
 
+cdpath=(~ ~/Documents/Codemill ~/Documents/Projects)
+
 
 safe-source "${HOME}/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh"
 ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=64
@@ -138,7 +140,6 @@ ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=64
 safe-source "${HOME}/.zsh/django-plugin/django.plugin.zsh"
 #safe-source "${HOME}/.zsh/make-dir-complete/make-dir-complete.plugin.zsh"
 
-cdpath=(~ ~/Documents/Codemill ~/Documents/Projects)
 
 safe-source "${HOME}/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 #ZSH_HIGHLIGHT_STYLES[globbing]='fg=yellow'
