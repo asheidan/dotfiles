@@ -1,4 +1,4 @@
-fpath=(${HOME}/.zsh/funcs /usr/local/share/zsh-completions $fpath)
+fpath=(${HOME}/.zsh/funcs /usr/local/share/zsh-completions /usr/local/share/zsh/site-functions $fpath)
 
 autoload -U colors; colors
 autoload zsh/terminfo
@@ -7,12 +7,15 @@ zstyle ':completion:*' completer _complete _match _approximate
 zstyle ':completion:*:max-errors:*' original only
 zstyle ':completion:*:approximate:*' max-errors 1 numeric
 #zstyle ':completion:*' group-name ''
-zstyle ':completion:*' list-colors ''
+zstyle ':completion:*:default' list-colors 'li=01;35:di=1;34'
+#zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*' matcher-list '+' 'm:{a-zA-Z}={A-Za-z}'
 zstyle ':completion:*' menu select
 zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
 
 zstyle ':completion:*:named-directories' group-name 'named-directories'
+zstyle ':completion:*:named-directories' list-colors '=*=1;34'
+zstyle ':completion:*:commands' list-colors '=*=1;32'
 zstyle ':completion:*:-tilde-:*' group-order 'named-directories' 'path-directories' 'users' 'expand'
 zstyle ':completion:*:-tilde-:*' ignored-patterns '_*'
 
@@ -98,6 +101,7 @@ preexec () {
 }
 
 set -o vi
+export KEYTIMEOUT=1
 bindkey -M vicmd '?' history-incremental-search-backward
 bindkey -M vicmd '/' history-incremental-search-forward
 bindkey -a u undo
@@ -137,7 +141,7 @@ cdpath=(~ ~/Documents/Codemill ~/Documents/Projects)
 safe-source "${HOME}/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh"
 ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=64
 
-safe-source "${HOME}/.zsh/django-plugin/django.plugin.zsh"
+#safe-source "${HOME}/.zsh/django-plugin/django.plugin.zsh"
 #safe-source "${HOME}/.zsh/make-dir-complete/make-dir-complete.plugin.zsh"
 
 
@@ -150,44 +154,68 @@ safe-source "${HOME}/.zsh/zsh-history-substring-search/zsh-history-substring-sea
 bindkey -M vicmd 'k' history-substring-search-up
 bindkey -M vicmd 'j' history-substring-search-down
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-export FZF_DEFAULT_OPTS="--inline-info --color='light,marker:5,pointer:4,prompt:4,hl:5,hl+:5,info:2,spinner:3'"
 
-ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(reset-prompt)
-function _is_in_git_repo() {
-  git rev-parse HEAD > /dev/null 2>&1
-}
-function _fzf () {
-	fzf --height 50% "$@"
-}
+which fzf &> /dev/null && {
+	[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+	export FZF_DEFAULT_OPTS="--inline-info --color='light,marker:5,pointer:4,prompt:4,hl:5,hl+:5,info:2,spinner:3'"
 
-function join-lines() {
-  local item
-  while read item; do
-    echo -n "${(q)item} "
-  done
-}
+	ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(reset-prompt)
+	function _is_in_git_repo() {
+		git rev-parse HEAD > /dev/null 2>&1
+	}
+	function _fzf () {
+		fzf --height 50% "$@"
+	}
 
-function _gt() {
-  _is_in_git_repo || return
-  git tag --sort -version:refname |
-  _fzf --multi --preview-window right:70% \
-    --preview 'git show --color=always {} | head -'$LINES
-}
-function _fzf-gt-widget() { local result=$(_gt | join-lines); zle reset-prompt; LBUFFER+=$result }
-zle -N _fzf-gt-widget
-ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(_fzf-gt-widget)
-bindkey '^X^G^T' _fzf-gt-widget
+	function join-lines() {
+		local item
+		while read item; do
+			echo -n "${(q)item} "
+		done
+	}
 
-function _gb() {
-  _is_in_git_repo || return
-  git branch -a --color=always | grep -v '/HEAD\s' | sort |
-  _fzf --ansi --multi --tac --preview-window right:70% \
-    --preview 'git log --color=always --oneline --graph --date=short --pretty="format:%C(auto)%cd %h%d %s" $(sed s/^..// <<< {} | cut -d" " -f1) | head -'$LINES |
-  sed 's/^..//' | cut -d' ' -f1 |
-  sed 's#^remotes/##'
+	function _gt() {
+		_is_in_git_repo || return
+		git tag --sort -version:refname |
+			_fzf --multi --preview-window right:70% \
+				 --preview 'git show --color=always {} | head -'$LINES
+	}
+	function _fzf-gt-widget() { local result=$(_gt | join-lines); zle reset-prompt; LBUFFER+=$result }
+	zle -N _fzf-gt-widget
+	ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(_fzf-gt-widget)
+	bindkey '^X^G^T' _fzf-gt-widget
+
+	function _gb() {
+		_is_in_git_repo || return
+		git branch -a --color=always | grep -v '/HEAD\s' | sort |
+			_fzf --ansi --multi --tac --preview-window right:70% \
+				 --preview 'git log --color=always --oneline --graph --date=short --pretty="format:%C(auto)%cd %h%d %s" $(sed s/^..// <<< {} | cut -d" " -f1) | head -'$LINES |
+			sed 's/^..//' | cut -d' ' -f1 |
+			sed 's#^remotes/##'
+	}
+	function _fzf-gb-widget() { local result=$(_gb | join-lines); zle reset-prompt; LBUFFER+=$result }
+	zle -N _fzf-gb-widget
+	ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(_fzf-gb-widget)
+	bindkey '^X^G^B' _fzf-gb-widget
+
+	# function flezz() {
+	# 	local header
+	# 	while getopts ":n:" o; do
+	# 		case "${o}" in
+	# 			'n')
+	# 				header=${OPTARG}
+	# 				;;
+	# 			':')
+	# 				case "${OPTARG}" in
+	# 					n)
+	# 						header=1
+	# 						;;
+	# 				esac
+	# 				;;
+	# 		esac
+	# 	done
+	# 	shift $((OPTIND-1))
+	#
+	# 	echo fzf ${header:+--header-lines="${header}"} "$@"
+	# }
 }
-function _fzf-gb-widget() { local result=$(_gb | join-lines); zle reset-prompt; LBUFFER+=$result }
-zle -N _fzf-gb-widget
-ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(_fzf-gb-widget)
-bindkey '^X^G^B' _fzf-gb-widget
