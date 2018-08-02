@@ -1,4 +1,5 @@
 fzf
+httpie
 jq
 kafkacat
 kubernetes-cli
