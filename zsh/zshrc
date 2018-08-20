@@ -74,6 +74,8 @@ function safe-source () {
 ls --version >/dev/null 2>&1 && alias ls='ls --color=auto -F' || alias ls='ls -G -F'
 which tree >/dev/null 2>&1 && alias tree='tree -C'
 
+which todo.sh >/dev/null 2>&1 && alias t='todo.sh'
+
 export EDITOR="vim"
 
 precmd () {
@@ -218,4 +220,15 @@ which fzf &> /dev/null && {
 	#
 	# 	echo fzf ${header:+--header-lines="${header}"} "$@"
 	# }
+
+	function fzpass() {
+		(
+			set -e
+			set -o pipefail
+
+			cd "${PASSWORD_STORE_DIR:-${HOME}/.password-store}"
+
+			find * -type f -name '*.gpg' | sed -e 's/\.gpg$//' | fzf --header="Password Store" | xargs pass "$@"
+		)
+	}
 }
