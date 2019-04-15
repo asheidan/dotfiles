@@ -156,6 +156,19 @@ safe-source "${HOME}/.zsh/zsh-history-substring-search/zsh-history-substring-sea
 bindkey -M vicmd 'k' history-substring-search-up
 bindkey -M vicmd 'j' history-substring-search-down
 
+which ranger &> /dev/null && {
+	function ranger-cd {
+		tempfile="$(mktemp -t tmp.XXXXXX)"
+		/usr/local/bin/ranger --choosedir="$tempfile" "${@:-$(pwd)}"
+		test -f "$tempfile" &&
+			if [ "$(cat -- "$tempfile")" != "$(echo -n `pwd`)" ]; then
+				cd -- "$(cat "$tempfile")"
+			fi
+		rm -f -- "$tempfile"
+	}
+
+	bindkey -s '^O' 'ranger-cd\n'
+}
 
 which fzf &> /dev/null && {
 	[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
