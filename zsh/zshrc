@@ -160,7 +160,7 @@ bindkey -M vicmd 'j' history-substring-search-down
 which ranger &> /dev/null && {
 	function ranger-cd {
 		tempfile="$(mktemp -t tmp.XXXXXX)"
-		/usr/local/bin/ranger --choosedir="$tempfile" "${@:-$(pwd)}"
+		ranger --choosedir="$tempfile" "${@:-$(pwd)}"
 		test -f "$tempfile" &&
 			if [ "$(cat -- "$tempfile")" != "$(echo -n `pwd`)" ]; then
 				cd -- "$(cat "$tempfile")"
@@ -173,6 +173,7 @@ which ranger &> /dev/null && {
 
 which fzf &> /dev/null && {
 	[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+	[ -f /usr/share/fzf/shell/key-bindings.zsh ] && source /usr/share/fzf/shell/key-bindings.zsh
 	export FZF_DEFAULT_OPTS="--inline-info --color='light,marker:5,pointer:4,prompt:4,hl:5,hl+:5,info:2,spinner:3'"
 
 	ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(reset-prompt)
