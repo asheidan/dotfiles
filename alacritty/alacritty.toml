@@ -1,0 +1,28 @@
+import = ["/Users/emil/.config/alacritty/papercolor-theme.toml"]
+
+[colors]
+draw_bold_text_with_bright_colors = true
+
+[font]
+builtin_box_drawing = true
+size = 9.0
+
+[font.bold]
+family = "ProFontIIx Nerd Font"
+style = "Book"
+
+[font.normal]
+family = "ProFontIIx Nerd Font"
+style = "Book"
+
+[window]
+decorations = "buttonless"
+dynamic_title = true
+
+[window.dimensions]
+columns = 80
+lines = 25
+
+[window.padding]
+x = 4
+y = 4
