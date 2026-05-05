@@ -1,12 +1,6 @@
 [user]
 	email = asheidan@gmail.com
 	name = Emil Eriksson
-[color]
-	diff = auto
-	status = auto
-	branch = auto
-	interactive = auto
-	ui = auto
 [core]
 	excludesfile = /Users/emil/.gitignore
 [alias]
@@ -21,5 +15,29 @@
 	last-common = !zsh -c 'diff --old-line-format='' --new-line-format='' <(git rev-list --first-parent "${1:-development}") <(git rev-list --first-parent "${2:-HEAD}") | head -1' -
 	branch-log = !zsh -c 'git log $(git last-common ${*})..${2:-HEAD}' -
 	authors = shortlog -sne
+[init]
+	defaultBranch = main
+[pull]
+	ff = only
 [diff]
 	tool = vimdiff
+[color]
+	diff = auto
+	status = auto
+	branch = auto
+	interactive = auto
+	ui = auto
+[color "decorate"]
+	branch = magenta
+	remoteBranch = blue
+	current = magenta bold
+	HEAD = magenta bold
+	tag = blue bold
+	stash = yellow
+	grafted = green
+[color "branch"]
+	current = magenta bold
+	remote = blue
+	local = magenta
+	upstream = blue bold
+	plain = green
