@@ -4,17 +4,21 @@
 [core]
 	excludesfile = /Users/emil/.gitignore
 [alias]
-	st = status -s
 	co = checkout
+	st = status -sb
+	sw = switch
+
+	authors = shortlog -sne
+	sha = rev-parse --verify HEAD
 	top-level = rev-parse --show-toplevel
 	tree = log --oneline --graph --decorate
-	stb = status -s -b
 	unmerged = branch --no-merged
-	sha = rev-parse --verify HEAD
-	search = "!f() { git grep \"$@\" $(git rev-list --all); }; f"
-	last-common = !zsh -c 'diff --old-line-format='' --new-line-format='' <(git rev-list --first-parent "${1:-development}") <(git rev-list --first-parent "${2:-HEAD}") | head -1' -
+
 	branch-log = !zsh -c 'git log $(git last-common ${*})..${2:-HEAD}' -
-	authors = shortlog -sne
+	l = log --graph --decorate --pretty=format:'%C(bold magenta)%h%Creset %C(yellow)%ae%Creset %C(cyan)%ai%Creset %C(auto)%D%Creset%n%s%n' --all -15 --ancestry-path=HEAD~10
+	last-common = !zsh -c 'diff --old-line-format='' --new-line-format='' <(git rev-list --first-parent "${1:-development}") <(git rev-list --first-parent "${2:-HEAD}") | head -1' -
+	orphans = !git branch -vv | grep \": gone\" | cut -c3- | cut -d\" \" -f1
+	search = "!f() { git grep \"$@\" $(git rev-list --all); }; f"
 [init]
 	defaultBranch = main
 [pull]
