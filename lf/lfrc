@@ -1,0 +1,22 @@
+#set nodrawbox
+
+map <c-z> $kill -STOP "$PPID"
+map <delete> delete
+map <c-d> delete
+
+map <space> toggle
+
+# Reporting the current directory to the terminal
+# https://github.com/gokcehan/lf/wiki/Tips#reporting-the-current-directory-to-the-terminal
+# cmd on-cd &lf -remote "send $id tty-write \"\033]7;file://$PWD\033\\\""
+# cmd on-quit tty-write "\033]7;\033\\"
+
+cmd on-cd &{{
+	lf -remote "send $id tty-write \"\033]0;LF - $(pwd | sed "s|^$HOME|~|")\007\""
+}}
+
+# Set the terminal title
+on-cd
+
+
+set promptfmt "\033[34;1m%d\033[0m\033[1m%f\033[0m%S\033[7;34m%F\033[0m"
