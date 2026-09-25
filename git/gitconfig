@@ -15,10 +15,12 @@
 	unmerged = branch --no-merged
 
 	branch-log = !zsh -c 'git log $(git last-common ${*})..${2:-HEAD}' -
-	l = log --graph --decorate --pretty=format:'%C(bold magenta)%h%Creset %C(yellow)%ae%Creset %C(cyan)%ai%Creset %C(auto)%D%Creset%n%s%n' --all -15 --ancestry-path=HEAD~10
-	last-common = !zsh -c 'diff --old-line-format='' --new-line-format='' <(git rev-list --first-parent "${1:-development}") <(git rev-list --first-parent "${2:-HEAD}") | head -1' -
+	l = log --graph --decorate --pretty=jj --all -15 --ancestry-path=HEAD~10
+	lg = log --graph --decorate --pretty=jj
+	last-common = !bash -c 'diff --old-line-format='' --new-line-format='' <(git rev-list --first-parent "${1:-main}") <(git rev-list --first-parent "${2:-HEAD}") | head -1' -
 	orphans = !git branch -vv | grep \": gone\" | cut -c3- | cut -d\" \" -f1
 	search = "!f() { git grep \"$@\" $(git rev-list --all); }; f"
+	largest-blobs = "!f() { if [ -t 1 ]; then printf \"\\e[7m%-40s %-7s %-30s\\e[0m\n\" SHA SIZE PATH; fi; git rev-list --objects --all | git cat-file --batch-check=\"%(objecttype) %(objectname) %(objectsize) %(rest)\" | sed -n \"s/^blob //p\" | sort -n --key=2 --reverse | head -n \"${1:-10}\" | numfmt --field=2 --to=iec-i --suffix=B --padding=7 --round=nearest; }; f"
 [init]
 	defaultBranch = main
 [pull]
@@ -45,3 +47,5 @@
 	local = magenta
 	upstream = blue bold
 	plain = green
+[pretty]
+	jj = format:%C(bold magenta)%h%Creset %C(yellow)%ae%Creset %C(cyan)%ai%Creset %C(auto)%D %gD%Creset%n%s%n
